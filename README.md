@@ -1,6 +1,6 @@
 # eCommerce Website
 
-## Project Status: Development
+## Project Status: API Development
 <br>
 
 ### Run
@@ -9,9 +9,3 @@ $ docker-compose up
 ```
 <br>
 
-### new service using Express init
-```text
-$ npm init
-$ npm install express --save
-```
-<br>
