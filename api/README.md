@@ -2,7 +2,7 @@
 
 ### Run
 ```text
-$ node ./index.js
+$ ndx nodemon index.js
 ```
 
 ### Init
