@@ -10,4 +10,6 @@ RUN npm install
 # Copy App
 COPY . .
 
-CMD ["node", "index.js"]
+# Run entrypoint Script
+RUN chmod +x entrypoint.sh
+CMD ["bash", "./entrypoint.sh"]

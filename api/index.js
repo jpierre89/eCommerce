@@ -1,10 +1,13 @@
+console.log("Starting api")
+
+// Dependencies
 const express = require('express')
 const cors = require('cors');
 
 const app = express()
 app.use(cors());
 
-const PORT = 8080
+const PORT = process.env.API_PORT || 8080
 const HOST = '0.0.0.0'
 const BASEURL = '/api'
 
@@ -13,5 +16,5 @@ app.get(BASEURL, (req, res) => {
 })
 
 app.listen(PORT, HOST, () => {
-    console.log("User Service listening")
+    console.log(`User Service listening on port ${PORT}`)
 })
