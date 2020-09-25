@@ -9,7 +9,7 @@ $ docker-compose up
 ```
 <br>
 
-### new service using Express init
+### Init
 ```text
 $ npm init
 $ npm install express --save
