@@ -1,24 +1,26 @@
 const { create } = require('./app');
 const request = require('supertest');
+const { expect, assert } = require('chai');
 
 
-describe('Application Testing', function() {
-    
-    before(function(done) {
+describe('/api', () => {    
+    before((done) => {
         app = create();
-        app.listen(
-            function(err) {
-                if (err) { return done(err); }
-                done();
-            }
-        );
+        app.listen((err) => {
+            if (err) { return done(err); }
+            done();
+        });
     });
 
-    it('Should get base url', function() {
+    beforeEach(() => {});
+    after(() => {});
+    afterEach(() => {});
+
+    it('GET 200', (done) => {
         request(app)
             .get('/api')
             .set('Content-Type', 'application/json')
-            .expect(200)
+            .expect(200, done);
     });
     
 });
