@@ -1,13 +1,20 @@
 # eCommerce API
 
 ### Run
-```text
-$ ndx nodemon index.js
+```sh
+ndx nodemon index.js
 ```
+<br>
+
+### Test
+```sh
+npx mocha test.js
+```
+<br>
 
 ### Init
-```text
-$ npm init
-$ npm install express --save
+```sh
+npm init
+npm install <package> --save
 ```
 <br>
