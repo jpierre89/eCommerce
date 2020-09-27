@@ -1,9 +1,9 @@
 // Temporary
-const users = [];
+let users = [];
 
 class User {
-    constructor(id, firstName, lastName) {
-        this.id = id;
+    constructor(username, firstName, lastName) {
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -14,8 +14,8 @@ class User {
 
 }
 
-exports.User = User
-exports.users = users 
+exports.User = User;
+exports.users = users;
 
   
 

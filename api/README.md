@@ -2,13 +2,13 @@
 
 ### Run
 ```sh
-ndx nodemon index.js
+npx nodemon index.js
 ```
 <br>
 
 ### Test
 ```sh
-npx mocha test.js
+npx mocha
 ```
 <br>
 
