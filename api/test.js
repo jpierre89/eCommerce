@@ -5,7 +5,7 @@ const { expect, assert } = require('chai');
 PATH = '/api';
 
 describe(PATH, () => {
-    URI = PATH;
+    let URI = PATH;
     
     before((done) => {
         app = create();
@@ -29,7 +29,7 @@ describe(PATH, () => {
 });
 
 describe(PATH.concat('/user'), () => {
-    URI = PATH.concat('/user');
+    let URI = PATH.concat('/user');
     
     before((done) => {
         app = create();
@@ -80,7 +80,7 @@ describe(PATH.concat('/user'), () => {
             });
     });
 
-    it('GET', (done) => {
+    it('GET by Id', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
@@ -94,6 +94,14 @@ describe(PATH.concat('/user'), () => {
                 expect(res.body.lastName).to.equal('Pierre');
                 done();
             });
+    });
+
+    it('GET list', (done) => {
+        request(app)
+            .get(URI)
+            .set('Content-Type', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200, done);
     });
 
     it('DELETE', (done) => {
@@ -115,7 +123,7 @@ describe(PATH.concat('/user'), () => {
 
 
 describe(PATH.concat('/storeItem'), () => {
-    STORE_ITEM_URI = PATH.concat('/storeItem');
+    let URI = PATH.concat('/storeItem');
     
     before((done) => {
         app = create();
@@ -131,16 +139,81 @@ describe(PATH.concat('/storeItem'), () => {
 
     it('POST', (done) => {
         request(app)
-            .post(STORE_ITEM_URI)
+            .post(URI)
             .set('Content-Type', 'application/json')
-            .query({
-                name: 'Apple'})
+            .send({
+                name: 'Apple2'})
             .expect('Content-Type', /json/)
             .expect(201, (err, res) => {
+                if (err) { return done(err); }
+                expect(res.body.name).to.equal('Apple2');
+                expect(res.body.id).to.equal(1);
+                done();
+            });
+    });
+
+    
+    it('PUT', (done) => {
+        request(app)
+            .put(URI)
+            .set('Content-Type', 'application/json')
+            .send({
+                id: 1,
+                name: 'Apple'})
+            .expect('Content-Type', /json/)
+            .expect(200, (err, res) => {
                 if (err) { return done(err); }
                 expect(res.body.name).to.equal('Apple');
                 expect(res.body.id).to.equal(1);
                 done();
             });
     });
+
+    it('GET by Id', (done) => {
+        request(app)
+            .get(URI)
+            .set('Content-Type', 'application/json')
+            .query({id: 1})
+            .expect('Content-Type', /json/)
+            .expect(200, (err, res) => {
+                if (err) { return done(err); }
+                expect(res.body.name).to.equal('Apple');
+                expect(res.body.id).to.equal(1);
+                done();
+            });
+    });
+
+    it('GET by query', (done) => {
+        request(app)
+            .get(URI)
+            .set('Content-Type', 'application/json')
+            .query({expr: 'pp'})
+            .expect(200, (err, res) => {
+                if (err) { return done(err); }
+                expect(res.body[0].name).to.equal('Apple');
+                expect(res.body[0].id).to.equal(1);
+                done();
+            });
+    });
+
+
+    it('GET list', (done) => {
+        request(app)
+            .get(URI)
+            .set('Content-Type', 'application/json')
+            .expect(200, done);
+    });
+
+    it('DELETE by Id', (done) => {
+        request(app)
+            .delete(URI)
+            .set('Content-Type', 'application/json')
+            .query({ id: 1 })
+            .expect(200, (err, res) => {
+                if (err) { return done(err); }
+                expect(res.body.name).to.equal('Apple');
+                expect(res.body.id).to.equal(1);
+                done();
+            });
+    });    
 });

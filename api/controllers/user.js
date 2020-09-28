@@ -40,10 +40,16 @@ router.put('/', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-    foundUser = users.find(user => {
-        return user.username == req.query.username;
-    });
-    res.status(200).json(foundUser);
+    // Get by username
+    if (req.query.username) {
+        foundUser = users.find(user => {
+            return user.username == req.query.username;
+        });
+        res.status(200).json(foundUser);
+    // Get list
+    } else {
+        res.status(200).json(users);
+    };
 });
 
 
@@ -62,8 +68,5 @@ router.delete('/', (req, res) => {
     };        
 });
 
-router.get('/list', (req, res) => {
-    res.status(200).send(JSON.stringify(users));
-});
 
 module.exports = router;
