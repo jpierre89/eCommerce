@@ -6,46 +6,53 @@ const { User, users } = require('../models/user');
 
 
 router.post('/', (req, res) => {
-    let newUser = req.body;
+    const body = req.body;
     currentUser = users.find(user => {
-        return user.username == newUser.username;
+        return user.email == body.email;
     });
     if (currentUser) {
         res.status(409).json({
-            "error": "Username already exists"
+            "error": "Email already exists"
         });
     } else {
-        users.push(newUser);
+        //newUser = Object.assign(User.prototype , body);
+        let newUser = Object.assign(new User(), body);
         res.status(201).json(newUser);
     };
 });
 
 router.put('/', (req, res) => {
-    let updatedUser = req.body;
-    foundUser = users.find(user => {
-        return user.username == updatedUser.username;
+    const query = req.query;
+    const body = req.body;
+    user = users.find(user => {
+        return user.id == query.userId;
     });
-    if (foundUser) {
-        foundUser.firstName = updatedUser.firstName;
-        foundUser.lastName = updatedUser.lastName;
-        if (updatedUser.newUsername) {
-            foundUser.username = updatedUser.newUsername;
-        };
-        res.status(200).json(foundUser);
+    if (user) {
+        user.email = body.email;
+        user.firstName = body.firstName;
+        user.lastName = body.lastName;
+        res.status(200).json(user);
     } else {
         res.status(404).json({
-            "error": "username not found"
+            "error": "user id not found"
         });
-    };           
+    };
 });
 
 router.get('/', (req, res) => {
-    // Get by username
-    if (req.query.username) {
-        foundUser = users.find(user => {
-            return user.username == req.query.username;
+    const query = req.query;
+    // Get by userId
+    if (query.userId) {
+        user = users.find(user => {
+            return user.id == query.userId;
         });
-        res.status(200).json(foundUser);
+        res.status(200).json(user);
+    // Get by email
+    } else if (query.email) {
+        user = users.find(user => {
+            return user.email == query.email;
+        });
+        res.status(200).json(user);
     // Get list
     } else {
         res.status(200).json(users);
@@ -54,13 +61,13 @@ router.get('/', (req, res) => {
 
 
 router.delete('/', (req, res) => {
-    const username = req.query.username;
+    const query = req.query;
     const idx = users.findIndex(user => {
-        return user.username == username;
+        return user.id == query.userId;
     });
     if (idx < 0) {
         res.status(404).json({
-            "error": "username not found"
+            "error": "User id not found"
         });
     } else {
         const deletedUser = users.splice(idx, 1)[0];

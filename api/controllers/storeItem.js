@@ -2,24 +2,27 @@
 var router = require('express').Router();
 
 // Internal Dependencies
-let { storeItem, storeItems, itemId } = require('../models/storeItem');
+let { storeItem, storeItems, itemId, StoreItem } = require('../models/storeItem');
 
 
 router.post('/', (req, res) => {
-    let newItem = req.body;
-    newItem.id = ++itemId;
-    storeItems.push(newItem);
-    res.status(201).json(newItem);
+    const body = req.body;
+    //let item = Object.assign(StoreItem.prototype , body);
+    let item = Object.assign(new StoreItem(), body);
+    res.status(201).json(item);
 });
 
 router.put('/', (req, res) => {
-    let updatedItem = req.body;
-    foundItem = storeItems.find(item => {
-        return item.id == updatedItem.id;
+    const query = req.query;
+    const body = req.body;
+    item = storeItems.find(item => {
+        return item.id == query.itemId;
     });
-    if (foundItem) {
-        foundItem.name = updatedItem.name;
-        res.status(200).json(foundItem);
+
+    if (item) {
+        item.name = body.name;
+        item.price = body.price;
+        res.status(200).json(item);
     } else {
         res.status(404).json({
             "error": "item id not found"
@@ -27,27 +30,24 @@ router.put('/', (req, res) => {
     };  
 });
 
-
 router.get('/', (req, res) => {
+    const query = req.query;
     // Get Item by Id
-    if (req.query.id) {
-        const itemId = req.query.id;
-        foundItem = storeItems.find(item => {
-            return item.id == itemId;
+    if (query.itemId) {
+        item = storeItems.find(item => {
+            return item.id == query.itemId;
         });
-        if (foundItem) {
-            res.status(200).json(foundItem);
+        if (item) {
+            res.status(200).json(item);
         } else {
             res.status(404).json({
                 "error": "item id not found"
             });
         };
-    // Get Item by query  
-    } else if (req.query.query) {
-        const expr = req.query.expr;
-        if (!expr) { res.status(400).json({"error": "expr required"}) }
+    // Get Item by query match
+    } else if (query.expr) {
         const matches = storeItems.filter(item =>
-            item.name.includes(expr)
+            item.name.includes(query.expr)
         );
         res.status(200).json(matches);
     // Get Item List
@@ -57,9 +57,9 @@ router.get('/', (req, res) => {
 });
 
 router.delete('/', (req, res) => {
-    const itemId = req.query.id;
+    const query = req.query;
     const idx = storeItems.findIndex(item => {
-        return item.id == itemId;
+        return item.id == query.itemId;
     });
     if (idx < 0) {
         res.status(404).json({

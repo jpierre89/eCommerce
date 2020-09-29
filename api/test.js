@@ -1,20 +1,17 @@
 const { create } = require('./app');
 const request = require('supertest');
 const { expect, assert } = require('chai');
+const { User } = require('./models/user');
 
 PATH = '/api';
+
+app = create();
+
 
 describe(PATH, () => {
     let URI = PATH;
     
-    before((done) => {
-        app = create();
-        app.listen((err) => {
-            if (err) { return done(err); }
-            done();
-        });
-    });
-
+    before(() => {});
     beforeEach(() => {});
     after(() => {});
     afterEach(() => {});
@@ -30,73 +27,65 @@ describe(PATH, () => {
 
 describe(PATH.concat('/user'), () => {
     let URI = PATH.concat('/user');
-    
-    before((done) => {
-        app = create();
-        app.listen((err) => {
-            if (err) { return done(err); }
-            done();
-        });
-    });
 
-    beforeEach(() => {});
-    after(() => {});
-    afterEach(() => {});
-
-    it('POST', (done) => {
+    it('POST user', (done) => {
         request(app)
             .post(URI)
             .set('Content-Type', 'application/json')
             .send({
-                username: 'jp2',
+                email: 'jp2@gmail.com',
                 firstName: 'John',
                 lastName: 'Forrest'})
             .expect('Content-Type', /json/)
             .expect(201, (err, res) => {
                 if (err) { return done(err); }
-                expect(res.body.username).to.equal('jp2');
+                expect(res.body.email).to.equal('jp2@gmail.com');
                 expect(res.body.firstName).to.equal('John');
                 expect(res.body.lastName).to.equal('Forrest');
+                expect(res.body.id).to.equal(0);
                 done();
             });
     });
 
-    it('PUT', (done) => {
+    it('PUT user by id', (done) => {
         request(app)
             .put(URI)
             .set('Content-Type', 'application/json')
+            .query({'userId': 0})
             .send({
-                username: 'jp2',
-                newUsername: 'jp',
+                id: 0,
+                email: 'jp@gmail.com',
                 firstName: 'Jon',
                 lastName: 'Pierre'})
             .expect('Content-Type', /json/)
             .expect(200, (err, res) => {
                 if (err) { return done(err); }
-                expect(res.body.username).to.equal('jp');
+                expect(res.body.email).to.equal('jp@gmail.com');
                 expect(res.body.firstName).to.equal('Jon');
                 expect(res.body.lastName).to.equal('Pierre');
+                expect(res.body.id).to.equal(0);
                 done();
             });
     });
 
-    it('GET by Id', (done) => {
+    it('GET user by email', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
             .query({
-                username: 'jp'})
+                email: 'jp@gmail.com'})
             .expect('Content-Type', /json/)
             .expect(200, (err, res) => {
                 if (err) { return done(err); }
-                expect(res.body.username).to.equal('jp');
+                expect(res.body.email).to.equal('jp@gmail.com');
                 expect(res.body.firstName).to.equal('Jon');
                 expect(res.body.lastName).to.equal('Pierre');
+                expect(res.body.id).to.equal(0);
                 done();
             });
     });
 
-    it('GET list', (done) => {
+    it('GET users list', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
@@ -104,18 +93,18 @@ describe(PATH.concat('/user'), () => {
             .expect(200, done);
     });
 
-    it('DELETE', (done) => {
+    it('DELETE user by id', (done) => {
         request(app)
             .delete(URI)
             .set('Content-Type', 'application/json')
-            .query({
-                username: 'jp'})
+            .query({userId: 0})
             .expect('Content-Type', /json/)
             .expect(200, (err, res) => {
                 if (err) { return done(err); }
-                expect(res.body.username).to.equal('jp');
+                expect(res.body.email).to.equal('jp@gmail.com');
                 expect(res.body.firstName).to.equal('Jon');
                 expect(res.body.lastName).to.equal('Pierre');
+                expect(res.body.id).to.equal(0);
                 done();
             });
     });
@@ -124,66 +113,59 @@ describe(PATH.concat('/user'), () => {
 
 describe(PATH.concat('/storeItem'), () => {
     let URI = PATH.concat('/storeItem');
-    
-    before((done) => {
-        app = create();
-        app.listen((err) => {
-            if (err) { return done(err); }
-            done();
-        });
-    });
 
-    beforeEach(() => {});
-    after(() => {});
-    afterEach(() => {});
-
-    it('POST', (done) => {
+    it('POST item', (done) => {
         request(app)
             .post(URI)
             .set('Content-Type', 'application/json')
             .send({
-                name: 'Apple2'})
+                name: 'Apple2',
+                price: 0.20})
             .expect('Content-Type', /json/)
             .expect(201, (err, res) => {
                 if (err) { return done(err); }
                 expect(res.body.name).to.equal('Apple2');
-                expect(res.body.id).to.equal(1);
+                expect(res.body.price).to.equal(0.20);
+                expect(res.body.id).to.equal(0);
                 done();
             });
     });
 
-    
-    it('PUT', (done) => {
+    it('PUT item by id', (done) => {
         request(app)
             .put(URI)
             .set('Content-Type', 'application/json')
+            .query({itemId: 0})
             .send({
-                id: 1,
-                name: 'Apple'})
+                id: 0,
+                name: 'Apple',
+                price: 0.25})
             .expect('Content-Type', /json/)
             .expect(200, (err, res) => {
                 if (err) { return done(err); }
                 expect(res.body.name).to.equal('Apple');
-                expect(res.body.id).to.equal(1);
+                expect(res.body.price).to.equal(0.25);
+                expect(res.body.id).to.equal(0);
                 done();
             });
     });
 
-    it('GET by Id', (done) => {
+    it('GET item by Id', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
-            .query({id: 1})
+            .query({itemId: 0})
             .expect('Content-Type', /json/)
             .expect(200, (err, res) => {
                 if (err) { return done(err); }
                 expect(res.body.name).to.equal('Apple');
-                expect(res.body.id).to.equal(1);
+                expect(res.body.price).to.equal(0.25);
+                expect(res.body.id).to.equal(0);
                 done();
             });
     });
 
-    it('GET by query', (done) => {
+    it('GET item by match', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
@@ -191,28 +173,29 @@ describe(PATH.concat('/storeItem'), () => {
             .expect(200, (err, res) => {
                 if (err) { return done(err); }
                 expect(res.body[0].name).to.equal('Apple');
-                expect(res.body[0].id).to.equal(1);
+                expect(res.body[0].price).to.equal(0.25);
+                expect(res.body[0].id).to.equal(0);
                 done();
             });
     });
 
-
-    it('GET list', (done) => {
+    it('GET item list', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
             .expect(200, done);
     });
 
-    it('DELETE by Id', (done) => {
+    it('DELETE item by id', (done) => {
         request(app)
             .delete(URI)
             .set('Content-Type', 'application/json')
-            .query({ id: 1 })
+            .query({ itemId: 0 })
             .expect(200, (err, res) => {
                 if (err) { return done(err); }
                 expect(res.body.name).to.equal('Apple');
-                expect(res.body.id).to.equal(1);
+                expect(res.body.price).to.equal(0.25);
+                expect(res.body.id).to.equal(0);
                 done();
             });
     });    

@@ -1,14 +1,18 @@
 // Temporary
 var storeItems = [];
-var itemId = 0;
 
 class StoreItem {
-    constructor(id, name) {
-        this.id = id;
+    constructor(name, price) {
         this.name = name;
+        this.price = price;
+        this.id = StoreItem.getNextItemId++;
+        storeItems.push(this);
     }
 }
 
-exports.storeItems = storeItems;
-exports.storeItem = StoreItem;
-exports.itemId = itemId;
+StoreItem.getNextItemId = 0;
+
+module.exports = {
+    StoreItem : StoreItem,
+    storeItems : storeItems
+}
