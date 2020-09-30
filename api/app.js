@@ -1,36 +1,29 @@
 // External Dependencies
 const express = require('express');
 const cors = require('cors');
-
-// Internal Dependencies
-const { User, users } = require('./models/user.js')
+const populate = require('./populate');
 
 const create = () => {
+    // Express App
+    const app = express();
+
     // Config
     const PORT = process.env.API_PORT || 8080;
     const HOST = '0.0.0.0';
-    const URL = '/api';
+    const PATH = '/api';
 
-    // Express App
-    const app = express();
-    app.use(cors());
     app.set('port', PORT);
-    app.set('host', HOST)
+    app.set('host', HOST);
 
-    // Controllers
-    app.get(URL, (req, res) => {
-        res.status(200).send('API');
-    });
+    // App Middleware
+    app.use(cors());
+    app.use(express.json());
+    app.use(PATH, require('./controllers'));
 
-    app.get(URL.concat('/user'), (req, res) => {
-        console.log(req.query.id);
-        res.send(req.query.id);
-    });
+    // Populate Data
+    populate(app)
 
-    app.get(URL.concat('/user/list'), (req, res) => {
-        res.status(200).send(JSON.stringify(users));
-    });
-
+    // Run Method
     app.run = () => {
         app.listen(
             PORT,
@@ -41,5 +34,4 @@ const create = () => {
     return app
 };
 
-// Exports
 exports.create = create;
