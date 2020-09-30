@@ -7,9 +7,11 @@ const { User, users } = require('../models/user');
 
 router.post('/', (req, res) => {
     const body = req.body;
+
     currentUser = users.find(user => {
         return user.email == body.email;
     });
+
     if (currentUser) {
         res.status(409).json({
             "error": "Email already exists"
@@ -24,9 +26,11 @@ router.post('/', (req, res) => {
 router.put('/', (req, res) => {
     const query = req.query;
     const body = req.body;
+
     user = users.find(user => {
         return user.id == query.userId;
     });
+
     if (user) {
         user.email = body.email;
         user.firstName = body.firstName;
@@ -41,6 +45,7 @@ router.put('/', (req, res) => {
 
 router.get('/', (req, res) => {
     const query = req.query;
+
     // Get by userId
     if (query.userId) {
         user = users.find(user => {
@@ -62,9 +67,11 @@ router.get('/', (req, res) => {
 
 router.delete('/', (req, res) => {
     const query = req.query;
+
     const user = users.find(user => {
         return user.id == query.userId;
     });
+    
     if (!user) {
         res.status(404).json({
             "error": "User id not found"

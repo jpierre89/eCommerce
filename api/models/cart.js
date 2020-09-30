@@ -19,6 +19,7 @@ class Cart {
     };
 
     delete() {
+        // Removes this item from the list of all carts
         for (let i = 0; i < carts.length; i++) {
             if (carts[i].id == this.id) {
                 carts.splice(i, 1);

@@ -32,6 +32,7 @@ router.put('/', (req, res) => {
 
 router.get('/', (req, res) => {
     const query = req.query;
+
     // Get Item by Id
     if (query.itemId) {
         item = storeItems.find(item => {
@@ -58,9 +59,11 @@ router.get('/', (req, res) => {
 
 router.delete('/', (req, res) => {
     const query = req.query;
+
     const idx = storeItems.findIndex(item => {
         return item.id == query.itemId;
     });
+    
     if (idx < 0) {
         res.status(404).json({
             "error": "item id not found"
