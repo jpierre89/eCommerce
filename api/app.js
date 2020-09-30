@@ -1,6 +1,7 @@
 // External Dependencies
 const express = require('express');
 const cors = require('cors');
+const populate = require('./populate');
 
 const create = () => {
     // Express App
@@ -18,6 +19,9 @@ const create = () => {
     app.use(cors());
     app.use(express.json());
     app.use(PATH, require('./controllers'));
+
+    // Populate Data
+    populate(app)
 
     // Run Method
     app.run = () => {
