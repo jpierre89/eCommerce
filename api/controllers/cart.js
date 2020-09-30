@@ -1,7 +1,6 @@
 // External Dependencies
 var router = require('express').Router();
 
-const cart = require('../models/cart');
 // Internal Dependencies
 const { Cart, carts } = require('../models/cart');
 const { StoreItem, storeItems } = require('../models/storeItem');

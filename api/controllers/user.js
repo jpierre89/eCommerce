@@ -62,16 +62,16 @@ router.get('/', (req, res) => {
 
 router.delete('/', (req, res) => {
     const query = req.query;
-    const idx = users.findIndex(user => {
+    const user = users.find(user => {
         return user.id == query.userId;
     });
-    if (idx < 0) {
+    if (!user) {
         res.status(404).json({
             "error": "User id not found"
         });
     } else {
-        const deletedUser = users.splice(idx, 1)[0];
-        res.status(200).json(deletedUser);
+        user.delete();
+        res.status(200).json(user);
     };        
 });
 

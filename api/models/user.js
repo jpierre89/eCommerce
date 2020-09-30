@@ -16,6 +16,17 @@ class User {
     getFullName() {
         return this.firstName.concat(` ${this.lastName}`);
     };
+
+    delete() {
+        // Deletes this User from users, and deletes this User's Cart
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].id == this.id) {
+                users.splice(i, 1);
+                break;
+            }
+        };
+        this.cart.delete();
+    };
 }
 
 User.nextUserId = 0;

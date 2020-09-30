@@ -17,6 +17,15 @@ class Cart {
         });
         return extendedPrice;
     };
+
+    delete() {
+        for (let i = 0; i < carts.length; i++) {
+            if (carts[i].id == this.id) {
+                carts.splice(i, 1);
+                break;
+            }
+        };
+    }
 };
 
 Cart.NextCartId = 0;
