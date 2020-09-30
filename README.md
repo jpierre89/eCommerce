@@ -1,7 +1,6 @@
 ## eCommerce Store
 
-<img alt="TravisCI" src=
-"https://travis-ci.org/jpierre89/eCommerce.svg?branch=master" />
+[![Build Status](https://travis-ci.org/jpierre89/eCommerce.svg?branch=master)](https://travis-ci.org/jpierre89/eCommerce)
 
 ### About
 ```text
