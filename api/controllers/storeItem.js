@@ -2,7 +2,7 @@
 var router = require('express').Router();
 
 // Internal Dependencies
-let { storeItem, storeItems, itemId, StoreItem } = require('../models/storeItem');
+let { storeItems, StoreItem } = require('../models/storeItem');
 
 
 router.post('/', (req, res) => {

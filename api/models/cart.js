@@ -3,8 +3,8 @@ let carts = [];
 
 class Cart {
     constructor(userId) {
+        this.id = Cart.NextCartId++;
         this.userId = userId;
-        this.cartId = Cart.NextCartId++;
         this.cartItems = [];
         carts.push(this);
     };
@@ -22,5 +22,6 @@ class Cart {
 Cart.NextCartId = 0;
 
 module.exports = {
-    Cart: Cart
+    Cart: Cart,
+    carts: carts
 };
