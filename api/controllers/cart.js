@@ -11,6 +11,7 @@ router.post('/', (req, res) => {
     // Add a storeItem to a Cart
     // Returns the storeItem
     const query = req.query;
+
     const cart = carts.find(cart => {
         return cart.id == query.cartId;
     });
@@ -20,6 +21,7 @@ router.post('/', (req, res) => {
         });
         return;
     };
+
     const storeItem = storeItems.find(item => {
         return item.id == query.itemId;
     });
@@ -29,10 +31,12 @@ router.post('/', (req, res) => {
         });
         return;
     }
+
     const quantity = parseInt(query.quantity);
     for (let i = 0; i < quantity; ++i) {
         cart.cartItems.push(storeItem);
     };
+
     const trans = Object.assign({}, storeItem);
     trans.quantity = quantity; 
     res.status(200).json(trans);
@@ -40,6 +44,7 @@ router.post('/', (req, res) => {
 
 router.delete('/', (req, res) => {
     const query = req.query;
+
     // Delete a quantity of storeItem from Cart
     // Returns the storeItem and quantity deleted
     if (query.itemId) {
@@ -52,6 +57,7 @@ router.delete('/', (req, res) => {
             });
             return;
         };
+
         const storeItem = storeItems.find(item => {
             return item.id == query.itemId;
         });
@@ -61,6 +67,7 @@ router.delete('/', (req, res) => {
             });
             return;
         }
+
         const quantity = parseInt(query.quantity);
         const idx = [];
         cart.cartItems.forEach((item) => {

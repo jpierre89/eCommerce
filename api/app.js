@@ -1,6 +1,8 @@
 // External Dependencies
 const express = require('express');
 const cors = require('cors');
+
+// Internal Dependencies
 const populate = require('./populate');
 
 const create = () => {
@@ -20,11 +22,12 @@ const create = () => {
     app.use(express.json());
     app.use(PATH, require('./controllers'));
 
-    // Populate Data
-    populate(app)
 
-    // Run Method
+    // Run Server Method
     app.run = () => {
+        // Populate Data
+        populate(app);
+        console.log(`Server listening on ${HOST}:${PORT}`);
         app.listen(
             PORT,
             HOST,      
