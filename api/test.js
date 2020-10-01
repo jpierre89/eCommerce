@@ -16,7 +16,7 @@ describe(PATH, () => {
     after(() => {});
     afterEach(() => {});
 
-    it('GET', (done) => {
+    it('GET: api route information', (done) => {
         request(app)
             .get('/api')
             .set('Content-Type', 'application/json')
@@ -28,7 +28,7 @@ describe(PATH, () => {
 describe(PATH.concat('/user'), () => {
     let URI = PATH.concat('/user');
 
-    it('POST user "John"', (done) => {
+    it('POST: create new user "John"', (done) => {
         request(app)
             .post(URI)
             .set('Content-Type', 'application/json')
@@ -47,7 +47,7 @@ describe(PATH.concat('/user'), () => {
             });
     });
 
-    it('POST another user "Jill"', (done) => {
+    it('POST: create another new user "Jill"', (done) => {
         request(app)
             .post(URI)
             .set('Content-Type', 'application/json')
@@ -66,7 +66,7 @@ describe(PATH.concat('/user'), () => {
             });
     });
 
-    it('PUT user by id 0', (done) => {
+    it('PUT: update existing user with id 0', (done) => {
         request(app)
             .put(URI)
             .set('Content-Type', 'application/json')
@@ -87,7 +87,7 @@ describe(PATH.concat('/user'), () => {
             });
     });
 
-    it('GET user by email', (done) => {
+    it('GET: return single user with email', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
@@ -104,7 +104,7 @@ describe(PATH.concat('/user'), () => {
             });
     });
 
-    it('GET users list', (done) => {
+    it('GET: return all users list', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
@@ -112,7 +112,7 @@ describe(PATH.concat('/user'), () => {
             .expect(200, done);
     });
 
-    it('DELETE user "Jill"', (done) => {
+    it('DELETE: delete user "Jill"', (done) => {
         request(app)
             .delete(URI)
             .set('Content-Type', 'application/json')
@@ -133,7 +133,7 @@ describe(PATH.concat('/user'), () => {
 describe(PATH.concat('/storeItem'), () => {
     let URI = PATH.concat('/storeItem');
 
-    it('POST item "Apple2"', (done) => {
+    it('POST: create new item "Apple2"', (done) => {
         request(app)
             .post(URI)
             .set('Content-Type', 'application/json')
@@ -150,7 +150,7 @@ describe(PATH.concat('/storeItem'), () => {
             });
     });
 
-    it('POST another item "Orange"', (done) => {
+    it('POST: create another new item "Orange"', (done) => {
         request(app)
             .post(URI)
             .set('Content-Type', 'application/json')
@@ -167,7 +167,7 @@ describe(PATH.concat('/storeItem'), () => {
             });
     });
 
-    it('PUT item by id 0', (done) => {
+    it('PUT: update item with id 0', (done) => {
         request(app)
             .put(URI)
             .set('Content-Type', 'application/json')
@@ -186,7 +186,7 @@ describe(PATH.concat('/storeItem'), () => {
             });
     });
 
-    it('GET item by Id 0', (done) => {
+    it('GET: return single item with Id 0', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
@@ -201,7 +201,7 @@ describe(PATH.concat('/storeItem'), () => {
             });
     });
 
-    it('GET item by match', (done) => {
+    it('GET: return all items that match', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
@@ -215,14 +215,14 @@ describe(PATH.concat('/storeItem'), () => {
             });
     });
 
-    it('GET item list', (done) => {
+    it('GET: return all items list', (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
             .expect(200, done);
     });
 
-    it('DELETE item by id 1', (done) => {
+    it('DELETE: delete item with id 1', (done) => {
         request(app)
             .delete(URI)
             .set('Content-Type', 'application/json')
@@ -241,7 +241,7 @@ describe(PATH.concat('/storeItem'), () => {
 describe(PATH.concat('/cart'), () => {
     let URI = PATH.concat('/cart');
 
-    it('POST storeItem to cart', (done) => {
+    it("POST: add a storeItem to a user's cart", (done) => {
         request(app)
             .post(URI)
             .set('Content-Type', 'application/json')
@@ -257,7 +257,7 @@ describe(PATH.concat('/cart'), () => {
             });
     });
 
-    it('GET cart', (done) => {
+    it("GET: return item in a user's cart", (done) => {
         request(app)
             .get(URI)
             .set('Content-Type', 'application/json')
@@ -272,7 +272,7 @@ describe(PATH.concat('/cart'), () => {
             });
     });
 
-    it('DELETE storeItem from cart', (done) => {
+    it("DELETE: delete a storeItem from a user's cart", (done) => {
         request(app)
             .delete(URI)
             .set('Content-Type', 'application/json')
@@ -288,7 +288,7 @@ describe(PATH.concat('/cart'), () => {
             });
     });
 
-    it('DELETE all items from cart', (done) => {
+    it("DELETE: all items from a user's cart", (done) => {
         request(app)
             .delete(URI)
             .set('Content-Type', 'application/json')

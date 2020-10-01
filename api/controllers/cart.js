@@ -2,9 +2,8 @@
 var router = require('express').Router();
 
 // Internal Dependencies
-const { Cart, carts } = require('../models/cart');
-const { StoreItem, storeItems } = require('../models/storeItem');
-const { User, users } = require('../models/user');
+const { carts } = require('../models/cart');
+const { storeItems } = require('../models/storeItem');
 
 
 router.post('/', (req, res) => {
@@ -70,9 +69,9 @@ router.delete('/', (req, res) => {
 
         const quantity = parseInt(query.quantity);
         const idx = [];
-        cart.cartItems.forEach((item) => {
+        cart.cartItems.forEach((item, itemIndex) => {
             if (item.id == storeItem.id) {
-                idx.push(item.id);
+                idx.push(itemIndex);
             };
         });
         if (idx.length >= quantity) {

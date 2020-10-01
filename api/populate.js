@@ -8,7 +8,7 @@ const { Cart, carts } = require('./models/cart');
 const user = require('./models/user');
 
 const USER_COUNT = 10;
-const ITEM_COUNT = 25;
+const ITEM_COUNT = 50;
 
 const populate = (app) => {
     console.log("Populating Data");
