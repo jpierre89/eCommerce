@@ -1,24 +1,25 @@
-const { create } = require('./app');
+const { init_app } = require('./app');
 const request = require('supertest');
 const { expect, assert } = require('chai');
 const { User } = require('./models/user');
 
-PATH = '/api';
 
-app = create();
+const PATH = '/api'; // The base path for all routes
+let app; // express application
 
+before( async () => {
+    app = await init_app(env="test");
+});
 
 describe(PATH, () => {
     let URI = PATH;
     
-    before(() => {});
-    beforeEach(() => {});
     after(() => {});
     afterEach(() => {});
 
     it('GET: api route information', (done) => {
         request(app)
-            .get('/api')
+            .get(URI)
             .set('Content-Type', 'application/json')
             .expect(200, done);
     });

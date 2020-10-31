@@ -8,5 +8,7 @@
 ### Run
 ```text
 $ docker-compose up
+
+note: requires additional .env with private data
 ```
 
