@@ -11,6 +11,10 @@ before( async () => {
     app = await init_app(env="test");
 });
 
+after(() => {
+    process.exit();
+})
+
 describe(PATH, () => {
     let URI = PATH;
     
