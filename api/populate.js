@@ -1,7 +1,5 @@
-// External
 const faker = require('faker');
-
-// Internal
+/*
 const { User, users } = require('./models/user');
 const { StoreItem, storeItems } = require('./models/storeItem');
 const { Cart, carts } = require('./models/cart');
@@ -37,5 +35,9 @@ const populate = async (app) => {
         };
     } ;
 };
+*/
 
+const populate = async () => {
+    // Temporary
+}
 module.exports = populate

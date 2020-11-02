@@ -17,33 +17,45 @@ const init_app = async (env) => {
     app.start_server = () => {       
         app.listen(
             app.get('port'),
-            app.get('host'),            
+            app.get('host'),
+            () => {
+                console.log(
+                    `Server listening on ${app.get('host')}:${app.get('port')}`
+                );
+            }            
         );
-        console.log(
-            `Server listening on ${app.get('host')}:${app.get('port')}`
-        );
+
     };
 
     return app
 };
 
 const init_db = async (env) => {
-    let db_url = null;
-    if (env !== 'production') {
-        db_url = await init_memory_db(env) 
+    let db_url;
+    let db_config;
+    
+    if (env === 'production') {
+        db_url = process.env.DB_URL;
+        db_config = {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            autoIndex: false
+        }
     } 
     else {
-        db_url = process.env.DB_URL;
+        db_url = await init_memory_db(env)
+        db_config = {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex:true,
+        } 
     }
 
     console.log(`db url: ${db_url}`)
-
     const database = await mongoose.connect(
         db_url,
-        {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        }
+        db_config
     );
 
     const result = database ? 'Connected to DB' : 'DB Error'

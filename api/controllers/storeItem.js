@@ -1,78 +1,138 @@
-// External Dependencies
 var router = require('express').Router();
-
-// Internal Dependencies
-let { storeItems, StoreItem } = require('../models/storeItem');
+let { StoreItem } = require('../models/StoreItem');
 
 
-router.post('/', (req, res) => {
-    const body = req.body;
-    //let item = Object.assign(StoreItem.prototype , body);
-    let item = Object.assign(new StoreItem(), body);
-    res.status(201).json(item);
-});
-
-router.put('/', (req, res) => {
-    const query = req.query;
-    const body = req.body;
-    item = storeItems.find(item => {
-        return item.id == query.itemId;
-    });
-
-    if (item) {
-        item.name = body.name;
-        item.price = body.price;
-        res.status(200).json(item);
-    } else {
-        res.status(404).json({
-            "error": "item id not found"
-        });
-    };  
-});
-
-router.get('/', (req, res) => {
-    const query = req.query;
-
-    // Get Item by Id
-    if (query.itemId) {
-        item = storeItems.find(item => {
-            return item.id == query.itemId;
-        });
-        if (item) {
-            res.status(200).json(item);
-        } else {
-            res.status(404).json({
-                "error": "item id not found"
-            });
-        };
-    // Get Item by query match
-    } else if (query.expr) {
-        const matches = storeItems.filter(item =>
-            item.name.includes(query.expr)
-        );
-        res.status(200).json(matches);
-    // Get Item List
-    } else {
-        res.status(200).json(storeItems);
+/* @desc    Create StoreItem
+ *
+ * @param   req.body.name
+ * @param   req.body.price        
+*/
+router.post('/', async (req, res) => {
+    try {
+        const savedItem = await createStoreItem(
+            req.body.name,
+            req.body.price
+        )
+        res.status(201).json(savedItem);
+    }
+    catch(err) {
+        res.status(400).json(err);
     }
 });
 
-router.delete('/', (req, res) => {
-    const query = req.query;
-
-    const idx = storeItems.findIndex(item => {
-        return item.id == query.itemId;
+async function createStoreItem(name, price) {
+    const newItem = new StoreItem({
+        name: name,
+        price: price,
     });
-    
-    if (idx < 0) {
-        res.status(404).json({
-            "error": "item id not found"
-        });
-    } else {
-        const deletedItem = storeItems.splice(idx, 1)[0];
-        res.status(200).json(deletedItem);
-    }; 
+
+    const savedItem = await newItem.save();
+    return savedItem;
+}
+
+/* @desc    Update StoreItem
+ *
+ * @param   req.query.id
+ * @param   req.body.name
+ * @param   req.body.price
+*/
+router.put('/', async (req, res) => {
+    try {
+        const item = await updateStoreItem(
+            req.query.id,
+            req.body.name,
+            req.body.price
+        )
+        res.status(200).json(item);
+    }
+    catch(err) {
+        res.status(400).json(err);
+    }
 });
 
+async function updateStoreItem(id, name, price) {
+    const item = await StoreItem.findById(id);
+    if (item) {
+        item.name = name;
+        item.price = price;
+        await item.save();
+        return item;
+    }
+    else {
+        return;
+    }
+}
 
-module.exports = router;
+/* @desc    Get StoreItem by id
+ *          Get StoreItems that match expression
+ *          Get all StoreItems
+ * 
+ * @param   req.query.id
+ * @param   req.query.expr
+*/
+router.get('/', async (req, res) => {
+    try {
+        if (req.query.id) {
+            const item = await getStoreItemById(req.query.id);
+            res.status(200).json(item);
+        }
+        else if (req.query.expr) {
+            const matchingStoreItems = await getMatchingStoreItems(req.query.expr);
+            res.status(200).json(matchingStoreItems);
+        }
+        else {
+            const storeItems = await getAllStoreItems();
+            res.status(200).json(storeItems);
+        }
+
+    }
+    catch (err) {
+        res.status(400).json(err);
+    }
+});
+
+async function getStoreItemById(id) {
+    const item = await StoreItem.findById(id);
+    return item;
+}
+
+async function getMatchingStoreItems(expr) {
+    const re = new RegExp(expr);
+    const items = await StoreItem.find({ name: re });
+    return items;
+}
+
+async function getAllStoreItems() {
+    const storeItems = await StoreItem.find().sort('name');
+    return storeItems;
+}
+
+/* @desc    Delete StoreItem
+ *
+ * @param   req.query.id
+*/
+router.delete('/', async (req, res) => {
+    try {
+        const storeItem = await deleteStoreItem(req.query.id);
+        res.status(200).json(storeItem);
+    }
+    catch(err) {
+        res.status(400).json(err);
+    }
+});
+
+async function deleteStoreItem(id) {
+    const storeItem = await StoreItem.findById(id);
+    await storeItem.remove();
+    return storeItem;
+}
+
+
+module.exports = {
+    router : router,
+    createStoreItem : createStoreItem,
+    updateStoreItem : updateStoreItem,
+    getStoreItemById : getStoreItemById,
+    getAllStoreItems : getAllStoreItems,
+    deleteStoreItem : deleteStoreItem
+}
