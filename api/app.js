@@ -1,14 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session); // MongoDB session store driver
 const populate = require('./populate');
 
 
 const init_app = async (env) => {
     const app = express();
     init_config(app);
-    init_middleware(app);
     await init_db(app);
+    init_middleware(app);
+    
 
     app.populate_database = async () => {
         await populate(this);
@@ -74,11 +77,13 @@ const init_config = (app) => {
     const PORT = process.env.API_PORT || 8080;
     const HOST = '0.0.0.0';
     const DB_URL = process.env.DB_URL;
+    const SESSION_SECRET = process.env.SESSION_SECRET || 'secret';
 
     app.set('environment', ENVIRONMENT)
-    app.set('port', PORT);
-    app.set('host', HOST);
-    app.set('db_url', DB_URL)
+    app.set('port', PORT); // app server port
+    app.set('host', HOST); // app server host
+    app.set('db_url', DB_URL);  // full db url
+    app.set('session_secret', SESSION_SECRET);
 
     console.log(`ENV: ${app.get('environment')}`)
 }
@@ -87,6 +92,23 @@ const init_middleware = (app) => {
     app.use(cors());
     app.use(express.json());
     app.use('/api', require('./controllers'));
+
+    const sess = {
+        secret: app.get('session_secret'), 
+        cookie: {},
+        resave: false,
+        saveUninitialized: true,
+        store: new MongoStore({mongooseConnection: mongoose.connection})
+    }
+
+    if (app.get('environment') === 'production') {
+        app.set('trust proxy', 1); // trust first proxy
+        sess.cookie.secure = true; // serve secure cookies
+    }
+
+    app.use(session(sess));
+    
+
 }
 
 exports.init_app = init_app;
