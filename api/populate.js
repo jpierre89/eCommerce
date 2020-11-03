@@ -1,43 +1,60 @@
 const faker = require('faker');
-/*
-const { User, users } = require('./models/user');
-const { StoreItem, storeItems } = require('./models/storeItem');
-const { Cart, carts } = require('./models/cart');
-const user = require('./models/user');
 
-const USER_COUNT = 10;
-const ITEM_COUNT = 50;
+const { User } = require('./models/User');
+const { StoreItem } = require('./models/StoreItem');
+const { CartItem } = require('./models/CartItem');
+
+const ITEM_COUNT = 50;  // Num StoreItems to create
+const USER_COUNT = 10; // Num Users to create
+
 
 const populate = async (app) => {
     console.log("Populating Data");
+
+    await User.deleteMany({});
+    await StoreItem.deleteMany({});
+    await CartItem.deleteMany({});
     
     for (let i = 0; i < ITEM_COUNT; i++) {
-        new StoreItem(
-            faker.commerce.productName(),
-            faker.commerce.price()
-        );
-    };
+        const newStoreItem = new StoreItem({
+            name : faker.commerce.productName(),
+            price : faker.commerce.price()
+        });
+
+        newStoreItem.save();
+    }
+
     for (let i = 0; i < USER_COUNT; i++) {
         const first = faker.name.firstName();
         const last = faker.name.lastName();
-        const newUser = new User(   
-            first,
-            last,
-            first.concat('@gmail.com'),
-        );
+        const newUser = new User({
+            email: first.concat(last).concat('@gmail.com'),
+            password: 'password',   
+            firstName: first,
+            lastName: last,    
+        });
 
-        const itemCount = Math.floor(Math.random() * Math.floor(7));
-        for(let j = 0; j < itemCount; j++) {
-            const itemIdx = Math.floor(Math.random() * Math.floor(ITEM_COUNT));
-            newUser.cart.cartItems.push(
-                storeItems[itemIdx]
-            );
-        };
-    } ;
+        // Give Each User random CartItems
+        const cartItemCount = 1 + Math.floor(Math.random() * Math.floor(3));
+        for(let j = 0; j < cartItemCount; j++) {
+            const random = Math.floor(Math.random() * ITEM_COUNT);
+            const randomQuantity = 1 + Math.floor(Math.random() * 2);
+            
+            const storeItem = await StoreItem.findOne().skip(random)
+
+            const newCartItem = new CartItem({
+                storeItem : storeItem,
+                quantity: randomQuantity
+            })
+
+            newCartItem.save();
+
+            newUser.cart.push(newCartItem);
+        }
+        newUser.save();
+    }
 };
-*/
 
-const populate = async () => {
-    // Temporary
-}
+
+
 module.exports = populate

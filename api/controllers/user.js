@@ -21,6 +21,7 @@ router.post('/', async (req, res) => {
         res.status(201).json(savedUser);
     }
     catch(err) {
+        console.log(err);
         res.status(400).json(err);
     }
 });
@@ -56,6 +57,7 @@ router.put('/', async (req, res) => {
         res.status(200).json(user);
     }
     catch(err) {
+        console.log(err);
         res.status(400).json(err);
     }
 });
@@ -87,6 +89,7 @@ router.get('/', async (req, res) => {
         }
     }
     catch(err) {
+        console.log(err);
         res.status(400).json(err);
     }
 });
@@ -111,6 +114,7 @@ router.delete('/', async (req, res) => {
         res.status(200).json(user);
     }
     catch(err) {
+        console.log(err);
         res.status(404).json({"error": "User id not found"});
     }
 });

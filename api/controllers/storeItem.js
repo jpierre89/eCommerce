@@ -16,6 +16,7 @@ router.post('/', async (req, res) => {
         res.status(201).json(savedItem);
     }
     catch(err) {
+        console.log(err);
         res.status(400).json(err);
     }
 });
@@ -46,6 +47,7 @@ router.put('/', async (req, res) => {
         res.status(200).json(item);
     }
     catch(err) {
+        console.log(err);
         res.status(400).json(err);
     }
 });
@@ -87,6 +89,7 @@ router.get('/', async (req, res) => {
 
     }
     catch (err) {
+        console.log(err);
         res.status(400).json(err);
     }
 });
@@ -117,6 +120,7 @@ router.delete('/', async (req, res) => {
         res.status(200).json(storeItem);
     }
     catch(err) {
+        console.log(err);
         res.status(400).json(err);
     }
 });

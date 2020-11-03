@@ -12,14 +12,19 @@ const { User } = require('../models/User');
 */
 router.post('/', async (req, res) => {
 
-    const item = await addCartItem(
-        req.query.userId,
-        req.query.storeItemId,
-        parseInt(req.query.quantity)
-    )
+    try {
+        const item = await addCartItem(
+            req.query.userId,
+            req.query.storeItemId,
+            parseInt(req.query.quantity)
+        )
 
-    return res.status(201).json(item)
-
+        return res.status(201).json(item)
+    }        
+    catch(err) {
+        console.log(err);
+        return res.status(400).json(err)
+    }
 });
 
 async function addCartItem(userId, storeItemId, quantity) {
@@ -37,7 +42,10 @@ async function addCartItem(userId, storeItemId, quantity) {
         cartItem = await _createNewCartItem(quantity, user, storeItem);
     }
 
-    return cartItem
+    // execPopulate() can populate an existing document
+    const detailedCartItem = await cartItem.populate({path: 'storeItem', model: StoreItem}).execPopulate()
+
+    return detailedCartItem;
 
 }
 
@@ -68,12 +76,18 @@ router.get('/', async (req, res) => {
         res.status(200).json(cart);
     }
     catch(err) {
+        console.log(err);
         res.status(400).json(err);
     }
 });
 
 async function getUserCart(userId) {
-    const user = await User.findById(userId).populate({path: 'cart', model: CartItem});
+    let user = await User.findById(userId)
+        .populate({path: 'cart', model: CartItem});
+
+    user = await user.populate({path: 'cart.storeItem', model: StoreItem})
+        .execPopulate();
+
     return user.cart;
 }
 
@@ -86,17 +100,24 @@ async function getUserCart(userId) {
 */
 router.delete('/', async (req, res) => {
 
-    if (req.query.cartItemId) {
-        const cartItem = await deleteCartItemQuantity(
-            req.query.cartItemId,
-            parseInt(req.query.quantity)
-        );
-        res.status(200).json(cartItem);
+    try {
+        if (req.query.cartItemId) {
+            const cartItem = await deleteCartItemQuantity(
+                req.query.cartItemId,
+                parseInt(req.query.quantity)
+            );
+            res.status(200).json(cartItem);
+        }
+        else {
+            await deleteAllCartItems(req.query.userId);
+            res.status(200).json();
+        }
     }
-    else {
-        await deleteAllCartItems(req.query.userId);
-        res.status(200).json();
+    catch(err) {
+        console.log(err);
+        res.status(400).json(err);
     }
+
 });
 
 async function deleteCartItemQuantity(cartItemId, quantity) {

@@ -8,7 +8,7 @@ const init_app = async (env) => {
     const app = express();
     init_config(app);
     init_middleware(app);
-    await init_db(env);
+    await init_db(app);
 
     app.populate_database = async () => {
         await populate(this);
@@ -30,12 +30,12 @@ const init_app = async (env) => {
     return app
 };
 
-const init_db = async (env) => {
+const init_db = async (app) => {
     let db_url;
     let db_config;
     
-    if (env === 'production') {
-        db_url = process.env.DB_URL;
+    if (app.get('environment') === 'production') {
+        db_url = app.get('db_url');
         db_config = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -44,7 +44,7 @@ const init_db = async (env) => {
         }
     } 
     else {
-        db_url = await init_memory_db(env)
+        db_url = await init_memory_db()
         db_config = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -62,7 +62,7 @@ const init_db = async (env) => {
     console.log(result)
 }
 
-const init_memory_db = async (env) => {
+const init_memory_db = async () => {
     const { MongoMemoryServer } = require('mongodb-memory-server');
     const mongo = new MongoMemoryServer();
     const memory_db_url = await mongo.getUri();
@@ -70,11 +70,17 @@ const init_memory_db = async (env) => {
 }
 
 const init_config = (app) => {
+    const ENVIRONMENT = process.env.ENVIRONMENT || 'local';
     const PORT = process.env.API_PORT || 8080;
     const HOST = '0.0.0.0';
+    const DB_URL = process.env.DB_URL;
 
+    app.set('environment', ENVIRONMENT)
     app.set('port', PORT);
     app.set('host', HOST);
+    app.set('db_url', DB_URL)
+
+    console.log(`ENV: ${app.get('environment')}`)
 }
 
 const init_middleware = (app) => {

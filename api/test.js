@@ -255,7 +255,7 @@ describe(PATH.concat('/cart'), () => {
                         .expect('Content-Type', /json/)
                         .expect(201, (err, res) => {
                             if (err) { return done(err); }
-                            expect(String(res.body.storeItem)).to.equal(String(item._id));
+                            expect(String(res.body.storeItem._id)).to.equal(String(item._id));
                             expect(res.body.quantity).to.equal(5);
                             done();
                         });
@@ -285,7 +285,7 @@ describe(PATH.concat('/cart'), () => {
                                 .expect('Content-Type', /json/)
                                 .expect(201, (err, res) => {
                                     if (err) { return done(err); }
-                                    expect(String(res.body.storeItem)).to.equal(String(item._id));
+                                    expect(String(res.body.storeItem._id)).to.equal(String(item._id));
                                     expect(res.body.quantity).to.equal(6);
                                     done();
                                 });
@@ -312,6 +312,7 @@ describe(PATH.concat('/cart'), () => {
                             .expect('Content-Type', /json/)
                             .expect(200, (err, res) => {
                                 if (err) { return done(err); }
+                                expect(res.body[0].storeItem.name).to.equal('Chips');
                                 expect(res.body[0].quantity).to.equal(1);
                                 done();
                             });
