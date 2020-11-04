@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const session = require('express-session')
+const jwt = require('jsonwebtoken');
 const MongoStore = require('connect-mongo')(session); // MongoDB session store driver
 const populate = require('./populate');
 
@@ -92,12 +93,14 @@ const init_config = (app, env) => {
     const HOST = '0.0.0.0';
     const DB_URL = process.env.DB_URL;
     const SESSION_SECRET = process.env.SESSION_SECRET || 'secret';
+    const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
     app.set('environment', ENVIRONMENT)
     app.set('port', PORT); // app server port
     app.set('host', HOST); // app server host
     app.set('db_url', DB_URL);  // full db url
     app.set('session_secret', SESSION_SECRET);
+    app.set('jwt_secret', JWT_SECRET);
 
     console.log(`Environment set: ${app.get('environment')}`)
 }
@@ -119,6 +122,22 @@ const init_middleware = (app) => {
     app.use(session(sess));
     app.use(cors());
     app.use(express.json());
+
+
+    // Adds user to request from verified jwt token
+    // Adds jwt secret key to request
+    app.use(async (req, res, next) => {
+        req.jwt_secret = app.get('jwt_secret')
+
+        const authHeader = req.headers.authorization;
+        if (authHeader) {
+            // Bearer eydhcj...
+            const jwtToken = authHeader.split(' ')[1];
+            const user = jwt.verify(jwtToken, app.get('jwt_secret'))
+            req.user = user;
+        }
+        next();
+    })
 
     // Any Middleware added after this router will not be called
     // for requests that target this router

@@ -1,4 +1,5 @@
 var router = require('express').Router();
+const { startSession } = require('mongoose');
 let { StoreItem } = require('../models/StoreItem');
 
 
@@ -82,19 +83,12 @@ router.get('/', async (req, res) => {
         }
         else if (req.query.expr) {
             const matchingStoreItems = await getMatchingStoreItems(req.query.expr);
-            addLastItemsViewed(matchingStoreItems, req.session)
             res.status(200).json(matchingStoreItems);
         }
         else if (req.query.recent) {
-            let lastItemsViewed = req.session.lastItemsViewed;
-            const numItems = parseInt(req.query.recent);
-
-            if (lastItemsViewed) {
-                res.status(200).json(lastItemsViewed.slice(0, numItems + 1))
-            }
-            else {
-                res.status(200).json();
-            }
+            const numItems = parseInt(req.query.recent)
+            const lastItems = getLastItemsViewed(numItems, req.session)
+            res.status(200).json(lastItems);
         }
         else {
             const storeItems = await getAllStoreItems();
@@ -123,12 +117,23 @@ async function getAllStoreItems() {
     return storeItems;
 }
 
-function addLastItemsViewed(item, session) {
+function getLastItemsViewed(numItems, session) {
     if (session.lastItemsViewed) {
-        session.lastItemsViewed.push(item);
+        return session.lastItemsViewed.slice(0, numItems + 1)
     }
-    else {
-        session.lastItemsViewed = [item];
+}
+
+function addLastItemsViewed(items, session) {
+    if (!items) {return;}
+
+    if (!session.lastItemsViewed || !Array.isArray(session.lastItemsViewed)) {
+        session.lastItemsViewed = [];
+    }
+
+    session.lastItemsViewed.unshift(items);
+
+    while (session.lastItemsViewed.length > 25) {
+        session.lastItemsViewed.pop();
     }
 }
 

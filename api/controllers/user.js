@@ -1,4 +1,5 @@
 var router = require('express').Router();
+const jwt = require('jsonwebtoken');
 const { User } = require('../models/User');
 
 
@@ -134,3 +135,35 @@ module.exports = {
     getAllUsers : getAllUsers,
     deleteUser : deleteUser
 }
+
+/* @desc    User Login
+ *   
+ * @param   req.body.email
+ * @param   req.body.password
+*/
+router.post('/login', async (req, res) => {
+
+    try {
+        const {email, password} = req.body;
+        const foundUser = await User.findOne(
+            {
+                email: email,
+                password: password
+            }
+        )
+        .exec()
+
+        if (foundUser) {
+            const accessToken = jwt.sign({user: foundUser}, req.jwt_secret)
+            res.status(200).json(accessToken);
+        }
+        else {
+            res.send(401);
+        }
+       res.status(200)
+    }
+    catch(err) {
+        console.log(err);
+        res.status(400).json(err);
+    }
+});

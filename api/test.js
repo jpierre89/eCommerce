@@ -39,6 +39,23 @@ describe(PATH, () => {
 describe(PATH.concat('/user'), () => {
     let URI = PATH.concat('/user');
 
+    it('Login', function(done) {
+        userController.createUser('jon99@gmail.com', 'password', 'jon',  'pierre')
+        .then((user) => {
+            request(app)
+                .post(URI.concat('/login'))
+                .set('Content-Type', 'application/json')
+                .send({
+                    email: 'jon99@gmail.com',
+                    password: 'password'})
+                .expect('Content-Type', /json/)
+                .expect(200, (err, res) => {
+                    if (err) { return done(err); }
+                    done()
+                });
+        });
+    });
+
     it('POST: create new user "John"', function(done) {
         request(app)
             .post(URI)
