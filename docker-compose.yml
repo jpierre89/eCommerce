@@ -10,4 +10,5 @@ services:
         environment:
             - API_PORT=${API_PORT}
             - DB_URL=${DB_URL}
+            - ENVIRONMENT=${ENVIRONMENT}
         restart: always
