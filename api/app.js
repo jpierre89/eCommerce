@@ -6,13 +6,23 @@ const MongoStore = require('connect-mongo')(session); // MongoDB session store d
 const populate = require('./populate');
 
 
+
 const init_app = async (env) => {
+    /* environments
+        - development (default)
+            - memory database
+        - testing
+            - memory database
+        - staging
+            - production Cloud DB
+        - production
+            - production Cloud DB */
+
     const app = express();
-    init_config(app);
+    init_config(app, env);
     await init_db(app);
     init_middleware(app);
     
-
     app.populate_database = async () => {
         await populate(this);
     }
@@ -37,7 +47,10 @@ const init_db = async (app) => {
     let db_url;
     let db_config;
     
-    if (app.get('environment') === 'production') {
+    if (app.get('environment') === 'production' ||
+        app.get('environment') === 'staging') {
+        
+        // Config for Cloud MongoDB
         db_url = app.get('db_url');
         db_config = {
             useNewUrlParser: true,
@@ -47,6 +60,7 @@ const init_db = async (app) => {
         }
     } 
     else {
+        // Config for In-Memory MongoDB
         db_url = await init_memory_db()
         db_config = {
             useNewUrlParser: true,
@@ -72,8 +86,8 @@ const init_memory_db = async () => {
     return memory_db_url
 }
 
-const init_config = (app) => {
-    const ENVIRONMENT = process.env.ENVIRONMENT || 'local';
+const init_config = (app, env) => {
+    const ENVIRONMENT = process.env.ENVIRONMENT || env || 'development';
     const PORT = process.env.API_PORT || 8080;
     const HOST = '0.0.0.0';
     const DB_URL = process.env.DB_URL;
@@ -85,14 +99,10 @@ const init_config = (app) => {
     app.set('db_url', DB_URL);  // full db url
     app.set('session_secret', SESSION_SECRET);
 
-    console.log(`ENV: ${app.get('environment')}`)
+    console.log(`Environment set: ${app.get('environment')}`)
 }
 
 const init_middleware = (app) => {
-    app.use(cors());
-    app.use(express.json());
-    app.use('/api', require('./controllers'));
-
     const sess = {
         secret: app.get('session_secret'), 
         cookie: {},
@@ -107,8 +117,12 @@ const init_middleware = (app) => {
     }
 
     app.use(session(sess));
-    
+    app.use(cors());
+    app.use(express.json());
 
+    // Any Middleware added after this router will not be called
+    // for requests that target this router
+    app.use('/api', require('./controllers'));
 }
 
 exports.init_app = init_app;

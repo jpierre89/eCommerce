@@ -70,23 +70,36 @@ async function updateStoreItem(id, name, price) {
  *          Get all StoreItems
  * 
  * @param   req.query.id
+ * @param   req.query.recent
  * @param   req.query.expr
 */
 router.get('/', async (req, res) => {
     try {
         if (req.query.id) {
             const item = await getStoreItemById(req.query.id);
+            addLastItemsViewed(item, req.session);
             res.status(200).json(item);
         }
         else if (req.query.expr) {
             const matchingStoreItems = await getMatchingStoreItems(req.query.expr);
+            addLastItemsViewed(matchingStoreItems, req.session)
             res.status(200).json(matchingStoreItems);
+        }
+        else if (req.query.recent) {
+            let lastItemsViewed = req.session.lastItemsViewed;
+            const numItems = parseInt(req.query.recent);
+
+            if (lastItemsViewed) {
+                res.status(200).json(lastItemsViewed.slice(0, numItems + 1))
+            }
+            else {
+                res.status(200).json();
+            }
         }
         else {
             const storeItems = await getAllStoreItems();
             res.status(200).json(storeItems);
         }
-
     }
     catch (err) {
         console.log(err);
@@ -108,6 +121,15 @@ async function getMatchingStoreItems(expr) {
 async function getAllStoreItems() {
     const storeItems = await StoreItem.find().sort('name');
     return storeItems;
+}
+
+function addLastItemsViewed(item, session) {
+    if (session.lastItemsViewed) {
+        session.lastItemsViewed.push(item);
+    }
+    else {
+        session.lastItemsViewed = [item];
+    }
 }
 
 /* @desc    Delete StoreItem

@@ -11,7 +11,7 @@ let app; // express app
 
 // Executed once before all tests
 before( async () => {
-    app = await init_app(env="test");
+    app = await init_app(env="testing");
 });
 
 // Executed once after all tests
@@ -214,6 +214,35 @@ describe(PATH.concat('/storeItem'), () => {
                 if (err) { return done(err); }
                 done();
             });
+    });
+
+    it('GET: recent Store Items viewed for the session', function(done) {
+        storeItemController.createStoreItem('Strawberry', 0.15)
+            .then((item) => {
+   
+                // Get Store Item
+                request(app)
+                    .get(URI)
+                    .set('Content-Type', 'application/json')
+                    .query({id: String(item._id)})
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .then(function() {
+                        // Next, Get the Store Items Viewed
+                        request(app)
+                            .get(URI)
+                            .set('Content-Type', 'application/json')
+                            .query({recent: 5})
+                            .expect('Content-Type', /json/)
+                            .expect(200, (err, res) => {
+                                if (err) { return done(err); }                           
+                                done();
+                            });
+                    });
+
+                })
+                .catch((err) => done(err));
+            
     });
 
     it('DELETE: delete StoreItem', function(done) {
