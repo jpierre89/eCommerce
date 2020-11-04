@@ -8,7 +8,7 @@
 ### Run
 ```text
 
-development: cd api && npm index.js
+development: cd api && node index.js
 
 testing: cd api && npm test
 
