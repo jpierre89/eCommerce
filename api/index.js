@@ -1,5 +1,7 @@
-const app = require('./app');
+const { init_app } = require('./app');
 
-console.log("Starting api");
-
-api = app.create().run();
+(async () => {
+    const app = await init_app();
+    await app.populate_database();
+    app.start_server();
+}) ()

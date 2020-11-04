@@ -1,86 +1,169 @@
-// External Dependencies
 var router = require('express').Router();
+const jwt = require('jsonwebtoken');
+const { User } = require('../models/User');
 
-// Internal Dependencies
-const { User, users } = require('../models/user');
 
+/* @desc    Create User
+ *   
+ * @param   req.body.email
+ * @param   req.body.password
+ * @param   req.body.firstName
+ * @param   req.body.lastName
+*/
+router.post('/', async (req, res) => {
+    try {
+        const savedUser = await createUser(
+            req.body.email,
+            req.body.password,
+            req.body.firstName,
+            req.body.lastName
+        )
 
-router.post('/', (req, res) => {
-    const body = req.body;
+        res.status(201).json(savedUser);
+    }
+    catch(err) {
+        console.log(err);
+        res.status(400).json(err);
+    }
+});
 
-    currentUser = users.find(user => {
-        return user.email == body.email;
+async function createUser(email, password, firstName, lastName) {
+    const newUser = new User({
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName
     });
+    const savedUser = await newUser.save();
+    return savedUser
+}
 
-    if (currentUser) {
-        res.status(409).json({
-            "error": "Email already exists"
-        });
-    } else {
-        //newUser = Object.assign(User.prototype , body);
-        let newUser = Object.assign(new User(), body);
-        res.status(201).json(newUser);
-    };
+/* @desc    Update User
+ *   
+ * @param   req.query.id
+ * @param   req.body.email
+ * @param   req.body.password
+ * @param   req.body.firstName
+ * @param   req.body.lastName
+*/
+router.put('/', async (req, res) => {
+    try {
+        const user = await updateUser (
+            req.query.id,
+            req.body.email,
+            req.body.password,
+            req.body.firstName,
+            req.body.lastName
+        )
+        res.status(200).json(user);
+    }
+    catch(err) {
+        console.log(err);
+        res.status(400).json(err);
+    }
 });
 
-router.put('/', (req, res) => {
-    const query = req.query;
-    const body = req.body;
+async function updateUser(id, email, password, firstName, lastName) {
+    const user = await User.findById(id);
+    user.email = email;
+    user.password = password;
+    user.firstName = firstName;
+    user.lastName = lastName;
+    await user.save();
+    return user
+}
 
-    user = users.find(user => {
-        return user.id == query.userId;
-    });
-
-    if (user) {
-        user.email = body.email;
-        user.firstName = body.firstName;
-        user.lastName = body.lastName;
-        res.status(200).json(user);
-    } else {
-        res.status(404).json({
-            "error": "user id not found"
-        });
-    };
+/* @desc    Get User by id
+ *          Get all Users
+ *
+ * @param   req.query.id
+*/
+router.get('/', async (req, res) => {
+    try {
+        if (req.query.id) {
+            const user = await getUserById(req.query.id);
+            res.status(200).json(user);
+        }
+        else {
+            const users = await getAllUsers();
+            res.status(200).json(users)
+        }
+    }
+    catch(err) {
+        console.log(err);
+        res.status(400).json(err);
+    }
 });
 
-router.get('/', (req, res) => {
-    const query = req.query;
+async function getUserById(id) {
+    const user = await User.findById(id);
+    return user;
+}
 
-    // Get by userId
-    if (query.userId) {
-        user = users.find(user => {
-            return user.id == query.userId;
-        });
+async function getAllUsers() {
+    const users = await User.find().sort('name');
+    return users
+}
+
+/* @desc    Delete User
+ *
+ * @param   req.query.id
+*/
+router.delete('/', async (req, res) => {
+    try {
+        const user = await deleteUser(req.query.id);
         res.status(200).json(user);
-    // Get by email
-    } else if (query.email) {
-        user = users.find(user => {
-            return user.email == query.email;
-        });
-        res.status(200).json(user);
-    // Get list
-    } else {
-        res.status(200).json(users);
-    };
+    }
+    catch(err) {
+        console.log(err);
+        res.status(404).json({"error": "User id not found"});
+    }
 });
 
+async function deleteUser(id) {
+    const user = await User.findById(id);
+    await user.remove();
+    return user;
+}
 
-router.delete('/', (req, res) => {
-    const query = req.query;
 
-    const user = users.find(user => {
-        return user.id == query.userId;
-    });
-    
-    if (!user) {
-        res.status(404).json({
-            "error": "User id not found"
-        });
-    } else {
-        user.delete();
-        res.status(200).json(user);
-    };        
+module.exports = {
+    router : router,
+    createUser : createUser,
+    updateUser : updateUser,
+    getUserById : getUserById,
+    getAllUsers : getAllUsers,
+    deleteUser : deleteUser
+}
+
+/* @desc    User Login
+ *   
+ * @param   req.body.email
+ * @param   req.body.password
+*/
+router.post('/login', async (req, res) => {
+
+    try {
+        const {email, password} = req.body;
+        const foundUser = await User.findOne(
+            {
+                email: email,
+                password: password
+            }
+        )
+        .exec()
+
+        if (foundUser) {
+            const accessToken = jwt.sign({user: foundUser}, req.jwt_secret)
+            res.status(200).json(accessToken);
+        }
+        else {
+            res.send(401);
+        }
+       res.status(200)
+    }
+    catch(err) {
+        console.log(err);
+        res.status(400).json(err);
+    }
 });
-
-
-module.exports = router;

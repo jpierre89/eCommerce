@@ -1,1 +1,3 @@
 eCommerceWorkspace
+.env
+api/run.sh
