@@ -18,9 +18,17 @@ production: requires hidden .env file
 ```
 
 
-### Build React App - *required*
+### Build React app - *required*
 ```text
 
 cd frontend && npm run build 
+
+```
+
+
+### React development server
+```text
+
+cd frontend && npm start
 
 ```
