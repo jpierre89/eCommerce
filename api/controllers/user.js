@@ -155,12 +155,11 @@ router.post('/login', async (req, res) => {
 
         if (foundUser) {
             const accessToken = jwt.sign({user: foundUser}, req.jwt_secret)
-            res.status(200).json(accessToken);
+            res.status(200).json({user: foundUser, jwt: accessToken});
         }
         else {
-            res.send(401);
+            res.status(401).json();
         }
-       res.status(200)
     }
     catch(err) {
         console.log(err);

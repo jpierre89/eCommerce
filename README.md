@@ -13,6 +13,15 @@ cd frontend && npm install && npm run build:dev
 cd ../api && npm install && node index.js
 ```
 
+
+### Development Login
+```text
+
+email: jp@gmail.com
+password: password
+
+```
+
 <br>
 
 ### Run Tests

@@ -51,6 +51,8 @@ describe(PATH.concat('/user'), () => {
                 .expect('Content-Type', /json/)
                 .expect(200, (err, res) => {
                     if (err) { return done(err); }
+                    expect(res.body.user.firstName).to.equal('jon')
+                    expect(res.body.jwt).to.be.a('string')
                     done()
                 });
         });
