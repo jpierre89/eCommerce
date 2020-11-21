@@ -5,6 +5,7 @@
 
 ### Live: https://ecommerce.jfpierre.dev/api
 
+<<<<<<< HEAD
 <br>
 
 ### First time instructions to start a full development server
@@ -15,6 +16,15 @@ cd ../api && npm install && node index.js
 
 <br>
 
+=======
+### Setup Instructions
+```text
+    1. Build the React app
+    2. Run the Express server
+        - Also serves frontend from the base url
+```
+
+>>>>>>> 64e8480251b3226411bbe8dc240185136e7448f4
 ### Run Express server
 ```text
 
