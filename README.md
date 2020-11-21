@@ -16,3 +16,11 @@ staging: requires hidden run.sh file
 production: requires hidden .env file
 
 ```
+
+
+### Build React App - *required*
+```text
+
+cd frontend && npm run build 
+
+```
