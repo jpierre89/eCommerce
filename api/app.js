@@ -4,7 +4,10 @@ const mongoose = require('mongoose');
 const session = require('express-session')
 const jwt = require('jsonwebtoken');
 const MongoStore = require('connect-mongo')(session); // MongoDB session store driver
+const path = require('path');
 const populate = require('./populate');
+
+
 
 
 
@@ -142,6 +145,14 @@ const init_middleware = (app) => {
     // Any Middleware added after this router will not be called
     // for requests that target this router
     app.use('/api', require('./controllers'));
+
+    // Serve react app
+    app.use(express.static(path.join(__dirname, '../frontend/build')))
+
+    app.get('/*', function (req, res) {
+        res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'))
+    })
+
 }
 
 exports.init_app = init_app;
