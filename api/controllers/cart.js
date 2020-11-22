@@ -1,4 +1,5 @@
 var router = require('express').Router();
+const { storeItem } = require('../../frontend/src/url');
 const { CartItem } = require('../models/CartItem');
 const { StoreItem } = require('../models/StoreItem');
 const { User } = require('../models/User');
@@ -32,7 +33,7 @@ async function addCartItem(userId, storeItemId, quantity) {
     const storeItem = await StoreItem.findById(storeItemId)
 
     let cartItem = user.cart.find(elem => 
-        String(elem.storeItem._id) == String(storeItem._id)
+        elem.storeItem == storeItem._id
     )
 
     if (cartItem) {
@@ -83,10 +84,22 @@ router.get('/', async (req, res) => {
 
 async function getUserCart(userId) {
     let user = await User.findById(userId)
-        .populate({path: 'cart', model: CartItem});
+        .populate({
+            path: 'cart',
+            model: CartItem,
+            populate: {
+                path: 'storeItem',
+                model: StoreItem
+            }
+        })
+        .exec();
 
+    /*
     user = await user.populate({path: 'cart.storeItem', model: StoreItem})
         .execPopulate();
+    */
+
+    console.log(user.cart)
 
     return user.cart;
 }

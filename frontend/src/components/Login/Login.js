@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 import './Login.css';
-const { REACT_APP_API_URL } = process.env;
+import url from '../../url';
 
-const LOGIN_URL = REACT_APP_API_URL + '/user/login';
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -30,7 +30,7 @@ export default class Login extends React.Component {
             }
 
             try {
-                const res = await axios.post(LOGIN_URL, body)
+                const res = await axios.post(url.login, body)
                 this.props.setUser(res.data.user);
                 this.props.setJWT(res.data.jwt);
             }
