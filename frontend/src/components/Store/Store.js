@@ -13,6 +13,8 @@ export default class Store extends React.Component {
         }
 
         this.onItemClicked = this.onItemClicked.bind(this);
+        this.onAddToCart = this.onAddToCart.bind(this);
+        this.showStoreItems = this.showStoreItems.bind(this);
     }
 
     async componentDidMount() {
@@ -22,8 +24,9 @@ export default class Store extends React.Component {
             res.data.forEach(item => {
                 items.add(
                     <li key={item._id}>
-                        <button onClick={() => this.onItemClicked(item)}  >{item.name}</button>: 
+                        <button onClick={() => this.onItemClicked(item)} >{item.name}</button>: 
                         ${item.price}
+                        <button onClick={() => this.onAddToCart(item)}>Add</button>
                     </li>
                 )
             })
@@ -36,24 +39,42 @@ export default class Store extends React.Component {
     }
 
     async onItemClicked(item) {
+        try {
+            const res = await axios.get(url.storeItem, {
+                headers: {
+                    'Authorization': `Bearer: ${this.props.jwt}`
+                },
+                params: {
+                    id: item._id
+                }
+            });
+
+            this.props.setRecentlyViewedItems();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    async onAddToCart(item) {
         if (this.props.user) {
             const config = {
+                headers: {
+                    'Authorization': `Bearer: ${this.props.jwt}`
+                },
                 params: {
                     userId: this.props.user._id,
                     storeItemId: item._id,
                     quantity: 1
-                },
-                headers: {
-                    'Authorization': `Bearer: ${this.props.jwt}`
-                },
+                }
             }
             try {
                 const res = await axios.post(url.cart, null, config)
-                this.props.setCartItems() // Refresh cart items
+                this.props.setCart();  // Refresh cart items
+                this.props.setRecentlyViewedItems();
             }
             catch (err) {
                 console.log(err);
-                alert("Cart not available")
             }
         }
         else {
@@ -62,14 +83,20 @@ export default class Store extends React.Component {
 
     }
 
+    showStoreItems() {
+        return this.state.storeItems
+    }
+
+
     render() {
         return (
             <div>
                 <h2>{this.state.title}</h2>
                 <ScrollArea>
-                    <ol>{this.state.storeItems}</ol>
+                    <ol>{ this.showStoreItems() }</ol>
                 </ScrollArea>
             </div>
         )
     }
+
 }

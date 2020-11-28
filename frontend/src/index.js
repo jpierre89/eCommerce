@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import axios from 'axios';
+
+// Allows session data to be sent for all requests.
+axios.defaults.withCredentials = true;
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import './Login.css';
 import url from '../../url';
 
@@ -33,6 +32,7 @@ export default class Login extends React.Component {
                 const res = await axios.post(url.login, body)
                 this.props.setUser(res.data.user);
                 this.props.setJWT(res.data.jwt);
+                this.props.setCart();
             }
             catch (err) {
                 console.log(err)
@@ -44,11 +44,10 @@ export default class Login extends React.Component {
         }
     }
 
-    async logoutHandler() {
+    logoutHandler() {
         // Log the User out
 
-        this.props.setUser(null);
-        this.props.setJWT('');
+        this.props.logout()
     }
 
     showGreeting() {

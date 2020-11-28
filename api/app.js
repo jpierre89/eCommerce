@@ -8,9 +8,6 @@ const path = require('path');
 const populate = require('./populate');
 
 
-
-
-
 const init_app = async (env) => {
     /* environments
         - development (default)
@@ -123,7 +120,23 @@ const init_middleware = (app) => {
     }
 
     app.use(session(sess));
-    app.use(cors());
+
+    app.use(
+        cors(
+            {
+                origin: [
+                    'http://127.0.0.1:3000',
+                    'http://localhost:3000',
+                    'http://localhost:8000',
+                    'http://localhost:8080',
+                    'http://ecommerce.jfpierre.dev',
+                    'https://ecommerce.jfpierre.dev'
+                ],
+                credentials: true
+            }
+        )
+    );
+
     app.use(express.json());
 
 
@@ -134,10 +147,13 @@ const init_middleware = (app) => {
 
         const authHeader = req.headers.authorization;
         if (authHeader) {
-            // Bearer eydhcj...
-            const jwtToken = authHeader.split(' ')[1];
-            const user = jwt.verify(jwtToken, app.get('jwt_secret'))
-            req.user = user;
+            try {
+                 // Bearer eydhcj...
+                const jwtToken = authHeader.split(' ')[1];
+                const user = jwt.verify(jwtToken, app.get('jwt_secret'))
+                req.user = user;
+            }
+            catch (err) {}
         }
         next();
     })

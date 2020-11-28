@@ -254,7 +254,9 @@ describe(PATH.concat('/storeItem'), () => {
                             .query({recent: 5})
                             .expect('Content-Type', /json/)
                             .expect(200, (err, res) => {
-                                if (err) { return done(err); }                           
+                                if (err) { return done(err); }
+                                // Note: The session cookie is not being sent here, 
+                                // so the response is empty.                      
                                 done();
                             });
                     });
@@ -333,6 +335,8 @@ describe(PATH.concat('/cart'), () => {
                                 .expect('Content-Type', /json/)
                                 .expect(201, (err, res) => {
                                     if (err) { return done(err); }
+                                    //console.log(res.body)
+                                    //console.log(item._id)
                                     expect(String(res.body.storeItem._id)).to.equal(String(item._id));
                                     expect(res.body.quantity).to.equal(6);
                                     done();

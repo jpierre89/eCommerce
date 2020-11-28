@@ -8,10 +8,6 @@ import './Container.css';
 import url from '../../url';
 import axios from 'axios';
 
-// user and jwt state exist on this parent container.
-// This has change handlers which are passed to it's children.
-// To change this lifted state, the children must call these change handlers.
-// The children will see the changes in state after this call.
 
 export default class Container extends React.Component {
     constructor(props) {
@@ -19,12 +15,27 @@ export default class Container extends React.Component {
         this.state = {
             user: null,
             jwt: '',
-            cartItems: []
+            cartItems: [],
+            recentStoreItemsViewed: []
         }
 
         this.setUser = this.setUser.bind(this);
         this.setJWT = this.setJWT.bind(this);
-        this.setCartItems = this.setCartItems.bind(this);
+        this.setCart = this.setCart.bind(this);
+        this.setRecentlyViewedItems = this.setRecentlyViewedItems.bind(this);
+        this.logout = this.logout.bind(this);
+    }
+
+    componentDidMount() {
+        this.setRecentlyViewedItems();
+    }
+
+    logout() {
+        this.setState({
+            user: null,
+            jwt: '',
+            cartItems: []
+        })
     }
 
     setUser(user_to_set) {
@@ -35,29 +46,43 @@ export default class Container extends React.Component {
         this.setState({jwt: jwt_to_set})
     }
 
-    async setCartItems() {
+    async setCart() {
         if (this.state.user) {
             const config = {
-                params: {
-                    userId: this.state.user._id
-                },
                 headers: {
                     'Authorization': `Bearer: ${this.state.jwt}`
+                },
+                params: {
+                    userId: this.state.user._id
                 }
             }
 
             try {
                 const res = await axios.get(url.cart, config)
 
-                this.setState(
-                    {
-                        cartItems: res.data
-                    }
-                )
+                this.setState({cartItems: res.data})
             }
             catch (err) {
                 alert("Cart Items Unavailable")
             }
+        }
+    }
+
+    async setRecentlyViewedItems(num=10) {
+        try {
+            const res = await axios.get(url.storeItem, {
+                headers: {
+                    'Authorization': `Bearer: ${this.state.jwt}`
+                },
+                params: {
+                    'recent': num
+                }
+            });
+    
+            this.setState({recentStoreItemsViewed: res.data})
+        }
+        catch (err) {
+            console.log(err);
         }
     }
 
@@ -66,16 +91,22 @@ export default class Container extends React.Component {
             <div>
                 <Title></Title>
                 <Login user={this.state.user} setUser={this.setUser}
-                       jwt={this.state.jwt}  setJWT={this.setJWT}>
+                       jwt={this.state.jwt}  setJWT={this.setJWT}
+                       setCart={this.setCart} logout={this.logout}>
                 </Login>
-                <Recent user={this.state.user} jwt={this.state.jwt}></Recent>
+                <Recent user={this.state.user}
+                        jwt={this.state.jwt}
+                        recentStoreItemsViewed={this.state.recentStoreItemsViewed}
+                        setRecentlyViewedItems={this.setRecentlyViewedItems}>
+                </Recent>
                 <Cart user={this.state.user}
                       jwt={this.state.jwt}
-                      cartItems={this.state.cartItems} setCartItems={this.setCartItems}
+                      cartItems={this.state.cartItems} setCart={this.setCart}
                 ></Cart>
                 <Store user={this.state.user}
                        jwt={this.state.jwt}
-                       setCartItems={this.setCartItems}
+                       setCart={this.setCart}
+                       setRecentlyViewedItems={this.setRecentlyViewedItems}
                 ></Store>
             </div>
         )

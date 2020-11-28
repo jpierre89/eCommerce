@@ -1,9 +1,8 @@
 var router = require('express').Router();
-const { storeItem } = require('../../frontend/src/url');
+const { storeItem, cart } = require('../../frontend/src/url');
 const { CartItem } = require('../models/CartItem');
 const { StoreItem } = require('../models/StoreItem');
 const { User } = require('../models/User');
-
 
 /* @desc    Create CartItem for User.cart
  *
@@ -19,7 +18,7 @@ router.post('/', async (req, res) => {
             req.query.storeItemId,
             parseInt(req.query.quantity)
         )
-
+            
         return res.status(201).json(item)
     }        
     catch(err) {
@@ -32,8 +31,8 @@ async function addCartItem(userId, storeItemId, quantity) {
     const user = await User.findById(userId).populate({ path: 'cart', model: CartItem}).exec();
     const storeItem = await StoreItem.findById(storeItemId)
 
-    let cartItem = user.cart.find(elem => 
-        elem.storeItem == storeItem._id
+    let cartItem = user.cart.find(elem =>
+        String(elem.storeItem) === String(storeItem._id)
     )
 
     if (cartItem) {
@@ -94,13 +93,6 @@ async function getUserCart(userId) {
         })
         .exec();
 
-    /*
-    user = await user.populate({path: 'cart.storeItem', model: StoreItem})
-        .execPopulate();
-    */
-
-    console.log(user.cart)
-
     return user.cart;
 }
 
@@ -116,6 +108,7 @@ router.delete('/', async (req, res) => {
     try {
         if (req.query.cartItemId) {
             const cartItem = await deleteCartItemQuantity(
+                req.query.userId,
                 req.query.cartItemId,
                 parseInt(req.query.quantity)
             );
@@ -133,13 +126,15 @@ router.delete('/', async (req, res) => {
 
 });
 
-async function deleteCartItemQuantity(cartItemId, quantity) {
+async function deleteCartItemQuantity(userId, cartItemId, quantity) {
     const cartItem = await CartItem.findById(cartItemId);
-    if (cartItem.quantity >= quantity) {
+    if (cartItem.quantity > quantity) {
         cartItem.quantity -= quantity;
     }
     else {
-        cartItem.quantity = 0;
+        const user = await User.findById(userId);
+        user.cart.pop(cartItemId);
+        await user.save();
     }
 
     await cartItem.save();

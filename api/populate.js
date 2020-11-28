@@ -20,7 +20,6 @@ const populate = async (app) => {
             name : faker.commerce.productName(),
             price : faker.commerce.price()
         });
-
         newStoreItem.save();
     }
 
@@ -56,14 +55,17 @@ const populate = async (app) => {
             
             const storeItem = await StoreItem.findOne().skip(random)
 
-            const newCartItem = new CartItem({
-                storeItem : storeItem,
-                quantity: randomQuantity
-            })
-
-            newCartItem.save();
-
-            newUser.cart.push(newCartItem);
+            // first storeItem was null for some reason: this is prevention check
+            if (storeItem) {
+                const newCartItem = new CartItem({
+                    storeItem : storeItem,
+                    quantity: randomQuantity
+                })
+    
+                newCartItem.save();
+    
+                newUser.cart.push(newCartItem);
+            }
         }
         newUser.save();
     }

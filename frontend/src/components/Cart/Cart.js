@@ -1,5 +1,6 @@
 import React from 'react';
 import Axios from 'axios';
+import CartItem from '../CartItem/CartItem';
 import ScrollArea from 'react-scrollbar';
 import './Cart.css'
 
@@ -8,46 +9,31 @@ export default class Cart extends React.Component {
         super(props);
         this.state = {
             title: 'Cart',
-            cartItems: ''
         }
 
-        this.onRemoveCartItem = this.onRemoveCartItem.bind(this);
+        this.showCartItems = this.showCartItems.bind(this);
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.cartItems !== prevProps.cartItems) {
             // this check prevents infinite recursion
 
-            console.log("updating items")
-            this.updateCartItems();
+            this.showCartItems();
         }
     }
 
-    updateCartItems() {
-        try {
-            const items = new Set();
-            this.props.cartItems.forEach(item => {
-                console.log(item)
-                items.add(
-                    <li key={item._id}>
-                        name: {item.storeItem.name} Price: ${item.storeItem.price}
-                        <button onClick={() => this.onRemoveCartItem(item)}>Remove Item</button>: 
-                    </li>
-                )
-            })
-            this.setState(
-                {
-                    cartItems: items
-                }
-            )
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
+    showCartItems() {
+        console.log(this.props.cartItems)
 
-    onRemoveCartItem(item) {
-        console.log(`onRemoveCartItem: ${item.name}`)
+        const cartItemList = this.props.cartItems.map((item) => 
+            <CartItem key={item._id} setCart={this.props.setCart} cartItem={item} user={this.props.user} jwt={this.props.jwt}/>
+        );
+        
+        return (
+            <ul>
+                {cartItemList}
+            </ul>
+        )
     }
 
     render() {
@@ -55,12 +41,11 @@ export default class Cart extends React.Component {
             <div>
                 <h2>{this.state.title}</h2>
                 <ScrollArea>
-                    <ol>
-                        {this.state.cartItems}
-                    </ol>            
+                    {this.showCartItems}         
                 </ScrollArea>
             </div>
 
         )
     }
+
 }
