@@ -32,14 +32,13 @@ export default class CartItem extends React.Component {
 
     render() {
         return (
-            <li>
-                <p>
-                    {this.props.cartItem.storeItem.name} | 
-                    Quantity: {this.props.cartItem.quantity} |
-                    Price: ${this.props.cartItem.storeItem.price}
-                    <button onClick={() => this.onRemoveCartItem()}>Remove Item</button>: 
-                </p>
-            </li>
+            <tr>
+                <td>{this.props.cartItem.storeItem.name}</td>
+                <td>{this.props.cartItem.storeItem.price}</td>
+                <td>{this.props.cartItem.quantity}</td>
+                <td>{parseInt(this.props.cartItem.quantity) * parseFloat(this.props.cartItem.storeItem.price)}</td>
+                <td><button onClick={() => this.onRemoveCartItem()}>X</button></td>                
+            </tr>
         )
     }
 }

@@ -26,12 +26,23 @@ export default class Cart extends React.Component {
         const cartItemList = this.props.cartItems.map((item) => 
             <CartItem key={item._id} setCart={this.props.setCart} cartItem={item} user={this.props.user} jwt={this.props.jwt}/>
         );
-        
-        return (
-            <ul>
-                {cartItemList}
-            </ul>
-        )
+
+        if (cartItemList && cartItemList.length > 0) {
+            return (
+                <table>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    {cartItemList}
+                </table>
+            )
+        }
+        else {
+            return (
+                <h4 id="empty">Empty</h4>
+            )
+        }
     }
 
     render() {
