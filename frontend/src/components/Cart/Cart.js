@@ -30,11 +30,17 @@ export default class Cart extends React.Component {
         if (cartItemList && cartItemList.length > 0) {
             return (
                 <table>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                    {cartItemList}
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {cartItemList}
+                    </tbody>              
                 </table>
             )
         }
@@ -49,7 +55,7 @@ export default class Cart extends React.Component {
         return (
             <div>
                 <h2>{this.state.title}</h2>
-                <ScrollArea speed={0.8} horizontal={true}>
+                <ScrollArea stopScrollPropagation={true} smoothScrolling={true} className="small-scroll-area">
                     {this.showCartItems}         
                 </ScrollArea>
             </div>

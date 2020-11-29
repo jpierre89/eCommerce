@@ -34,9 +34,9 @@ export default class CartItem extends React.Component {
         return (
             <tr>
                 <td>{this.props.cartItem.storeItem.name}</td>
-                <td>{this.props.cartItem.storeItem.price}</td>
+                <td className="money-color">${this.props.cartItem.storeItem.price}</td>
                 <td>{this.props.cartItem.quantity}</td>
-                <td>{parseInt(this.props.cartItem.quantity) * parseFloat(this.props.cartItem.storeItem.price)}</td>
+                <td className="money-color">${parseInt(this.props.cartItem.quantity) * parseFloat(this.props.cartItem.storeItem.price)}</td>
                 <td><button onClick={() => this.onRemoveCartItem()}>X</button></td>                
             </tr>
         )

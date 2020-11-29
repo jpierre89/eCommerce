@@ -73,10 +73,10 @@ export default class Login extends React.Component {
         }
         else {
             return (
-                <div id="login-btn-group">
-                    <input id="inputUsername" placeholder="username" ref={this.usernameInput}></input>
-                    <input id="inputPassword" placeholder="password" ref={this.passwordInput}></input>
-                    <button onClick={this.loginHandler}>Submit</button>
+                <div>
+                    <input id="inputUsername" className="login-group" placeholder="username" ref={this.usernameInput}></input>
+                    <input id="inputPassword" className="login-group" placeholder="password" ref={this.passwordInput}></input>
+                    <button className="login-group" onClick={this.loginHandler}>Submit</button>
                 </div>
             )
         }

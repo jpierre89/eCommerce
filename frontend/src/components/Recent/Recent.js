@@ -25,13 +25,13 @@ export default class Recent extends React.Component {
         if (this.props.recentStoreItemsViewed) {
             const items = [];
             this.props.recentStoreItemsViewed.forEach((item) => {
-                items.push(<li key={item._id}>{item.name}</li>)             
+                items.push(<li id="recent-item" key={item._id}>{item.name}</li>)             
             });
     
             return (
-                <ul>
+                <ol>
                     {items}
-                </ul>
+                </ol>
             )
         }
     }
@@ -40,7 +40,7 @@ export default class Recent extends React.Component {
         return (
             <div>
                 <h2>{this.state.title}</h2>           
-                <ScrollArea>
+                <ScrollArea stopScrollPropagation={true} smoothScrolling={true} className="small-scroll-area">
                     {this.showRecentItems}        
                 </ScrollArea>
             </div>

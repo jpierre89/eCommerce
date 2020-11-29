@@ -90,10 +90,12 @@ export default class Store extends React.Component {
 
     render() {
         return (
-            <ScrollArea className="scrollArea">
-                <h2>{this.state.title}</h2>
-                <ul>{ this.showStoreItems() }</ul>
-            </ScrollArea>
+            <div id="store-component">
+                <h2 id="store-title">{this.state.title}</h2>
+                <ScrollArea stopScrollPropagation={true} smoothScrolling={true} className="store-scroll-area">
+                    <ul id="item-list">{ this.showStoreItems() }</ul>
+                </ScrollArea>
+            </div>
         )
     }
 

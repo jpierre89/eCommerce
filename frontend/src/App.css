@@ -3,3 +3,16 @@ ul {
     margin: 0;
     padding: 0;
 }
+
+ol {
+    padding-left: 0;
+    list-style: inside decimal;
+}
+
+.small-scroll-area {
+    max-height: 150px;
+}
+
+.money-color {
+    color: green;
+}

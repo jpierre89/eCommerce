@@ -128,12 +128,12 @@ router.delete('/', async (req, res) => {
 
 async function deleteCartItemQuantity(userId, cartItemId, quantity) {
     const cartItem = await CartItem.findById(cartItemId);
-    if (cartItem.quantity > quantity) {
+    if (parseInt(cartItem.quantity) > quantity) {
         cartItem.quantity -= quantity;
     }
     else {
         const user = await User.findById(userId);
-        user.cart.pop(cartItemId);
+        user.cart.pull(cartItem);
         await user.save();
     }
 

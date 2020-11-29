@@ -1,10 +1,16 @@
+.store-scroll-area {
+    max-height: 500px;
+    width: 500px;
+}
+
 .item {
     max-width: 450px;
-    justify-self: center;
+    margin: auto;
 }
 
 .item-name {
     min-width: 300px;
+    text-align: left;
 }
 
 .item-price {
@@ -12,6 +18,22 @@
     float: right;
 }
 
-.item-add {
-    float: left;
+#store-title {
+    text-align: center;
 }
+
+#store-component {
+    margin: auto;
+    width: 50%;
+    max-width: 500px;
+}
+
+@media only screen and (max-width: 900px) {
+    #store-component {
+      width: 100%;
+    }
+    #store-title {
+        text-align: left;
+    }
+
+  }
