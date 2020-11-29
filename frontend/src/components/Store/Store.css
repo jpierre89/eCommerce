@@ -1,0 +1,17 @@
+.item {
+    max-width: 450px;
+    justify-self: center;
+}
+
+.item-name {
+    min-width: 300px;
+}
+
+.item-price {
+    color: green;
+    float: right;
+}
+
+.item-add {
+    float: left;
+}

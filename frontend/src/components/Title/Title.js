@@ -11,7 +11,7 @@ export default class Title extends React.Component {
 
     render() {
         return (
-            <div>
+            <div id="component">
                 <h1>{this.state.title}</h1>
             </div>
         )

@@ -23,8 +23,6 @@ export default class Cart extends React.Component {
     }
 
     showCartItems() {
-        console.log(this.props.cartItems)
-
         const cartItemList = this.props.cartItems.map((item) => 
             <CartItem key={item._id} setCart={this.props.setCart} cartItem={item} user={this.props.user} jwt={this.props.jwt}/>
         );
@@ -40,7 +38,7 @@ export default class Cart extends React.Component {
         return (
             <div>
                 <h2>{this.state.title}</h2>
-                <ScrollArea>
+                <ScrollArea speed={0.8} horizontal={true}>
                     {this.showCartItems}         
                 </ScrollArea>
             </div>

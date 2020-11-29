@@ -4,6 +4,7 @@ import Login from '../Login/Login';
 import Recent from '../Recent/Recent';
 import Cart from '../Cart/Cart';
 import Store from '../Store/Store';
+import Footer from '../Footer/Footer';
 import './Container.css';
 import url from '../../url';
 import axios from 'axios';
@@ -88,26 +89,39 @@ export default class Container extends React.Component {
 
     render() {
         return (
-            <div>
-                <Title></Title>
-                <Login user={this.state.user} setUser={this.setUser}
-                       jwt={this.state.jwt}  setJWT={this.setJWT}
-                       setCart={this.setCart} logout={this.logout}>
-                </Login>
-                <Recent user={this.state.user}
-                        jwt={this.state.jwt}
-                        recentStoreItemsViewed={this.state.recentStoreItemsViewed}
-                        setRecentlyViewedItems={this.setRecentlyViewedItems}>
-                </Recent>
-                <Cart user={this.state.user}
-                      jwt={this.state.jwt}
-                      cartItems={this.state.cartItems} setCart={this.setCart}
-                ></Cart>
-                <Store user={this.state.user}
-                       jwt={this.state.jwt}
-                       setCart={this.setCart}
-                       setRecentlyViewedItems={this.setRecentlyViewedItems}
-                ></Store>
+            <div id="container">
+                <div id="title">
+                    <Title  ></Title>
+                </div>
+                <div id="login">
+                    <Login  user={this.state.user} setUser={this.setUser}
+                            jwt={this.state.jwt}  setJWT={this.setJWT}
+                            setCart={this.setCart} logout={this.logout}>
+                    </Login>
+                </div>
+                <div id="recent">
+                    <Recent user={this.state.user}
+                            jwt={this.state.jwt}
+                            recentStoreItemsViewed={this.state.recentStoreItemsViewed}
+                            setRecentlyViewedItems={this.setRecentlyViewedItems}>
+                    </Recent>
+                </div>
+                <div id="cart">
+                    <Cart  user={this.state.user}
+                           jwt={this.state.jwt}
+                           cartItems={this.state.cartItems} setCart={this.setCart}>
+                    </Cart>
+                </div>
+                <div id="store">
+                    <Store  user={this.state.user}
+                            jwt={this.state.jwt}
+                            setCart={this.setCart}
+                            setRecentlyViewedItems={this.setRecentlyViewedItems}>
+                    </Store>
+                </div>
+                <div id="footer">
+                    <Footer></Footer>
+                </div>
             </div>
         )
     }

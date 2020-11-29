@@ -57,7 +57,7 @@ export default class Login extends React.Component {
             return (<h3>Welcome, {this.props.user.firstName}</h3>)
         }
         else {
-            return (<h3>Please Log In</h3>)
+            return (<h2>Log In</h2>)
         }
     }
 
@@ -66,18 +66,18 @@ export default class Login extends React.Component {
 
         if (this.props.user) {
             return (
-                <Fragment>
+                <div>
                     <button onClick={this.logoutHandler}>Log Out</button>
-                </Fragment>
+                </div>
             )
         }
         else {
             return (
-                <Fragment>
+                <div id="login-btn-group">
                     <input id="inputUsername" placeholder="username" ref={this.usernameInput}></input>
                     <input id="inputPassword" placeholder="password" ref={this.passwordInput}></input>
                     <button onClick={this.loginHandler}>Submit</button>
-                </Fragment>
+                </div>
             )
         }
     }

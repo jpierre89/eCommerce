@@ -23,10 +23,10 @@ export default class Store extends React.Component {
             const items = new Set();
             res.data.forEach(item => {
                 items.add(
-                    <li key={item._id}>
-                        <button onClick={() => this.onItemClicked(item)} >{item.name}</button>: 
-                        ${item.price}
-                        <button onClick={() => this.onAddToCart(item)}>Add</button>
+                    <li className="item" key={item._id}>
+                        <button className="item-name" onClick={() => this.onItemClicked(item)}>{item.name}</button>
+                        <span className="item-price">${item.price}</span>
+                        <button className="item-add" onClick={() => this.onAddToCart(item)}>Add</button>
                     </li>
                 )
             })
@@ -90,12 +90,10 @@ export default class Store extends React.Component {
 
     render() {
         return (
-            <div>
+            <ScrollArea className="scrollArea">
                 <h2>{this.state.title}</h2>
-                <ScrollArea>
-                    <ol>{ this.showStoreItems() }</ol>
-                </ScrollArea>
-            </div>
+                <ul>{ this.showStoreItems() }</ul>
+            </ScrollArea>
         )
     }
 
