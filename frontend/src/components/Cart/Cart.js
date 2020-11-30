@@ -27,27 +27,29 @@ export default class Cart extends React.Component {
             <CartItem key={item._id} setCart={this.props.setCart} cartItem={item} user={this.props.user} jwt={this.props.jwt}/>
         );
 
-        if (cartItemList && cartItemList.length > 0) {
-            return (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {cartItemList}
-                    </tbody>              
-                </table>
-            )
-        }
-        else {
-            return (
-                <h4 id="empty">Empty</h4>
-            )
+        if (this.props.user) {
+            if (cartItemList && cartItemList.length > 0) {
+                return (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {cartItemList}
+                        </tbody>              
+                    </table>
+                )
+            }
+            else {
+                return (
+                    <h4 id="empty">Empty</h4>
+                )
+            }
         }
     }
 
