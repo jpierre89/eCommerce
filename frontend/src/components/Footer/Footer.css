@@ -1,3 +1,5 @@
-#footer-text {
+.footer-text {
     text-align: center;
+    padding: 0;
+    margin: 0;
 }
