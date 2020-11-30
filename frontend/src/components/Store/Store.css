@@ -1,19 +1,19 @@
 .store-scroll-area {
-    max-height: 500px;
-    width: 500px;
+    max-height: 400px;
+    max-width: 400px;
+    border: 1px black;
 }
 
 #store-title {
-    text-align: center;
 }
 
 .item {
-    max-width: 400px;
-    margin: auto;
+    max-width: 350px;
+    margin: left;
 }
 
 .item-name {
-    min-width: 300px;
+    min-width: 250px;
     text-align: left;
 }
 
@@ -25,11 +25,11 @@
 #store-component {
     margin: auto;
     width: 50%;
-    max-width: 500px;
 }
 
-@media only screen and (max-width: 1100px) {
+@media only screen and (max-width: 1000px) {
     #store-component {
       width: 100%;
+      margin: left;
     }
 }
