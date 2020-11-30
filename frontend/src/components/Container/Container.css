@@ -1,38 +1,42 @@
-
-#container {
-
+.component {
+    padding: 25px;
+    margin: 25px;
+    box-shadow: 5px 5px 5px grey;
 }
 
-#container > div {
-    padding: 25px;
+#user-section {
+    display: flex;
+    flex-direction: row;
 }
 
 #title {
-
-    background-color: lightgreen;
-}
-
-#recent {
-
-    background-color: lightseagreen;
+    background-color: lightcoral;
 }
 
 #login {
-
-    background-color: lightslategray;
+    background-color: lightgrey;
 }
 
-#cart {
-
+#recent {
+    min-width: 300px;
     background-color: lightskyblue;
 }
 
-#store {
+#cart {
+    flex-grow: 2;
+    background-color: lightgreen;
+}
 
+#store {
     background-color: lightgoldenrodyellow;
 }
 
 #footer {
-
     background-color: lightcoral;
+}
+
+@media only screen and (max-width: 800px) {
+    #user-section {
+        flex-direction: column;
+    }
 }

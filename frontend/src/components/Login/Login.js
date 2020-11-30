@@ -16,7 +16,6 @@ export default class Login extends React.Component {
 
         this.loginHandler = this.loginHandler.bind(this);
         this.logoutHandler = this.logoutHandler.bind(this);
-        this.showGreeting = this.showGreeting.bind(this);
     }
 
     async loginHandler() {
@@ -50,30 +49,21 @@ export default class Login extends React.Component {
         this.props.logout()
     }
 
-    showGreeting() {
-        // JSX Greeting
-
-        if (this.props.user) {
-            return (<h3>Welcome, {this.props.user.firstName}</h3>)
-        }
-        else {
-            return (<h2>Log In</h2>)
-        }
-    }
-
     showLogin() {
         // JSX Login/Logout
 
         if (this.props.user) {
             return (
                 <div>
+                    <h2>Welcome, {this.props.user.firstName}</h2>
                     <button onClick={this.logoutHandler}>Log Out</button>
                 </div>
             )
         }
         else {
             return (
-                <div>
+                <div id="login-component">
+                    <h2>Log In</h2>
                     <input id="inputUsername" className="login-group" placeholder="username" ref={this.usernameInput}></input>
                     <input id="inputPassword" className="login-group" placeholder="password" ref={this.passwordInput}></input>
                     <button className="login-group" onClick={this.loginHandler}>Submit</button>
@@ -85,7 +75,6 @@ export default class Login extends React.Component {
     render() {
         return (
             <div>
-                <Fragment>{this.showGreeting()}</Fragment>
                 <Fragment>{this.showLogin()}</Fragment>
             </div>
         )

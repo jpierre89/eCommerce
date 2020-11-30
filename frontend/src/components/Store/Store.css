@@ -3,8 +3,12 @@
     width: 500px;
 }
 
+#store-title {
+    text-align: center;
+}
+
 .item {
-    max-width: 450px;
+    max-width: 400px;
     margin: auto;
 }
 
@@ -18,22 +22,14 @@
     float: right;
 }
 
-#store-title {
-    text-align: center;
-}
-
 #store-component {
     margin: auto;
     width: 50%;
     max-width: 500px;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1100px) {
     #store-component {
       width: 100%;
     }
-    #store-title {
-        text-align: left;
-    }
-
-  }
+}
