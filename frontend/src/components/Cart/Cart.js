@@ -19,7 +19,7 @@ export default class Cart extends React.Component {
         if (this.props.cartItems !== prevProps.cartItems) {
             // this check prevents infinite recursion
 
-            this.showCartItems();
+            //this.showCartItems();
         }
     }
 
@@ -49,8 +49,9 @@ export default class Cart extends React.Component {
                                 {cartItemList}
                             </tbody>              
                         </table>
+                        {this.showCartTotal()}          
                     </div>
-                )
+                )             
             }
             else {
                 return (
@@ -74,12 +75,10 @@ export default class Cart extends React.Component {
         return (
             <div>
                 <h2>{this.state.title}</h2>
-                <ScrollArea stopScrollPropagation={true} smoothScrolling={true} className="small-scroll-area">
-                    {this.showCartItems}   
+                <ScrollArea stopScrollPropagation={true} smoothScrolling={true} className="small-scroll-area">                
+                    {this.showCartItems}
                 </ScrollArea>
-                {this.showCartTotal}
-            </div>
-
+            </div> 
         )
     }
 

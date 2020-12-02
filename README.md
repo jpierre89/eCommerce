@@ -1,9 +1,9 @@
 # eCommerce Store [![Build Status](https://travis-ci.org/jpierre89/eCommerce.svg?branch=master)](https://travis-ci.org/jpierre89/eCommerce)
->eCommerce web store application to learn Express, MongoDB, React for CS3320
+> Web store application project submission for Texas State course CS 3320 based on course requirements. Technologies include Express, Mongodb, React.
 
 <br>
 
-### Live: https://ecommerce.jfpierre.dev/api
+![Alt text](./Screenshot.png?raw=true "website image")
 
 <br>
 
