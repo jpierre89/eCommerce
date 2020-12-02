@@ -117,24 +117,29 @@ async function getAllStoreItems() {
     return storeItems;
 }
 
-function getLastItemsViewed(numItems, session) {
+function getLastItemsViewed(numItems=5, session) {
     if (session.lastItemsViewed) {
         return session.lastItemsViewed.slice(0, numItems + 1)
     }
 }
 
-function addLastItemsViewed(items, session) {
-    if (!items) {return;}
+function addLastItemsViewed(item, session) {
+    if (!item) {return;}
 
-    if (!session.lastItemsViewed || !Array.isArray(session.lastItemsViewed)) {
+    if (!Array.isArray(session.lastItemsViewed)) {
         session.lastItemsViewed = [];
     }
 
-    session.lastItemsViewed.unshift(items);
+    session.lastItemsViewed = session.lastItemsViewed.filter(e =>
+        String(e._id) !== String(item._id)
+    )
+
+    session.lastItemsViewed.unshift(item);
 
     while (session.lastItemsViewed.length > 25) {
         session.lastItemsViewed.pop();
     }
+
 }
 
 /* @desc    Delete StoreItem

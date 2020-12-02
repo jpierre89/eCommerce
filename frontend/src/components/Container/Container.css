@@ -1,0 +1,43 @@
+.component {
+    padding: 25px;
+    margin: 25px;
+    box-shadow: 5px 5px 5px grey;
+}
+
+
+#user-section {
+    display: flex;
+    flex-direction: row;
+}
+
+#title {
+    background-color: lightcoral;
+}
+
+#login {
+    background-color: lightgrey;
+}
+
+#recent {
+    min-width: 300px;
+    background-color: lightskyblue;
+}
+
+#cart {
+    flex-grow: 2;
+    background-color: lightgreen;
+}
+
+#store {
+    background-color: lightgoldenrodyellow;
+}
+
+#footer {
+    background-color: lightcoral;
+}
+
+@media only screen and (max-width: 800px) {
+    #user-section {
+        flex-direction: column;
+    }
+}

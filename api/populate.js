@@ -20,19 +20,32 @@ const populate = async (app) => {
             name : faker.commerce.productName(),
             price : faker.commerce.price()
         });
-
         newStoreItem.save();
     }
 
     for (let i = 0; i < USER_COUNT; i++) {
-        const first = faker.name.firstName();
-        const last = faker.name.lastName();
-        const newUser = new User({
-            email: first.concat(last).concat('@gmail.com'),
-            password: 'password',   
-            firstName: first,
-            lastName: last,    
-        });
+        let newUser = null;
+        if (i === 0) {
+            // Create a single non-random user for testing / development
+
+            newUser = new User({
+                email: 'jp@gmail.com',
+                password: 'password',   
+                firstName: 'jon',
+                lastName: 'pierre',    
+            });
+        }
+        else {
+            const first = faker.name.firstName();
+            const last = faker.name.lastName();
+            newUser = new User({
+                email: first.concat(last).concat('@gmail.com'),
+                password: 'password',   
+                firstName: first,
+                lastName: last,    
+            });
+        }
+
 
         // Give Each User random CartItems
         const cartItemCount = 1 + Math.floor(Math.random() * Math.floor(3));
@@ -42,14 +55,17 @@ const populate = async (app) => {
             
             const storeItem = await StoreItem.findOne().skip(random)
 
-            const newCartItem = new CartItem({
-                storeItem : storeItem,
-                quantity: randomQuantity
-            })
-
-            newCartItem.save();
-
-            newUser.cart.push(newCartItem);
+            // first storeItem was null for some reason: this is prevention check
+            if (storeItem) {
+                const newCartItem = new CartItem({
+                    storeItem : storeItem,
+                    quantity: randomQuantity
+                })
+    
+                newCartItem.save();
+    
+                newUser.cart.push(newCartItem);
+            }
         }
         newUser.save();
     }

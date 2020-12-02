@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const session = require('express-session')
 const jwt = require('jsonwebtoken');
 const MongoStore = require('connect-mongo')(session); // MongoDB session store driver
+const path = require('path');
 const populate = require('./populate');
-
 
 
 const init_app = async (env) => {
@@ -120,7 +120,23 @@ const init_middleware = (app) => {
     }
 
     app.use(session(sess));
-    app.use(cors());
+
+    app.use(
+        cors(
+            {
+                origin: [
+                    'http://127.0.0.1:3000',
+                    'http://localhost:3000',
+                    'http://localhost:8000',
+                    'http://localhost:8080',
+                    'http://ecommerce.jfpierre.dev',
+                    'https://ecommerce.jfpierre.dev'
+                ],
+                credentials: true
+            }
+        )
+    );
+
     app.use(express.json());
 
 
@@ -131,10 +147,13 @@ const init_middleware = (app) => {
 
         const authHeader = req.headers.authorization;
         if (authHeader) {
-            // Bearer eydhcj...
-            const jwtToken = authHeader.split(' ')[1];
-            const user = jwt.verify(jwtToken, app.get('jwt_secret'))
-            req.user = user;
+            try {
+                 // Bearer eydhcj...
+                const jwtToken = authHeader.split(' ')[1];
+                const user = jwt.verify(jwtToken, app.get('jwt_secret'))
+                req.user = user;
+            }
+            catch (err) {}
         }
         next();
     })
@@ -142,6 +161,14 @@ const init_middleware = (app) => {
     // Any Middleware added after this router will not be called
     // for requests that target this router
     app.use('/api', require('./controllers'));
+
+    // Serve react app
+    app.use(express.static(path.join(__dirname, '../frontend/build')))
+
+    app.get('/*', function (req, res) {
+        res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'))
+    })
+
 }
 
 exports.init_app = init_app;
